@@ -1,16 +1,43 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import '../assets/Login.css'
 
 function Login() {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        
+    })
+
+    const login = () => {
+
+    }
+
   return (
-    <div>
-      <div className='login'>
-          <h1>Login</h1>
-          <label>Username</label>
-          <input type='text' placeholder='Username...' />
-          <label>Password</label>
-          <input type='password' placeholder='Password...' />
-          <button>Login</button>
-      </div>
+    <div className="login-wrapper">
+      <h1>Please Log In</h1>
+      <form>
+        <label>
+          <p>Username</p>
+          <input 
+            type="text"
+            onChange={(e) => {
+                setUsername(e.target.value);
+                }} />
+        </label>
+        <label>
+          <p>Password</p>
+          <input 
+            type="password"
+            onChange={(e) => {
+                setPassword(e.target.value);
+                }}
+             />
+        </label>
+        <div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
     </div>
   )
 }
