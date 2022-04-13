@@ -6,11 +6,11 @@ module.exports = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: process.env.MYSQL_PASSWORD,
-    database: 'nodelogin',
-    dialect: 'mysql',
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000 }
+    database: 'tmsapp',
+    // dialect: 'mysql2'
+    // pool: {
+    //     max: 5,
+    //     min: 0,
+    //     acquire: 30000,
+    //     idle: 10000 }
 });
