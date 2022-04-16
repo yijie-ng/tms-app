@@ -1,84 +1,48 @@
 const express = require('express');
 const app = express();
-const routes = require('./routes');
 const cors = require('cors');
-const session = require('express-session');
-const bodyParser = require('body-parser');
-// const req = require('express/lib/request');
 const port = process.env.PORT || 3001;
 
-app.use(cors());
+const session = require('express-session');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
+const userRoute = require('./routes/User');
+const authRoute = require('./routes/Authentication');
+
+app.use(express.json());
+app.use(cors({
+    origin: ['http://localhost:3000'],
+    methods: ['GET', 'POST'],
+    credentials: true
+}));
+
+// parse cookies
+app.use(cookieParser());
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: false})); 
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 // Generate a unique session id, store session id in a session cookie, create empty session object
 app.use(session({
-    secret: 'secret',
-	resave: true,
-	saveUninitialized: true
+    key: 'username',
+    secret: 'thisisasecretkey',
+	resave: false,
+	saveUninitialized: false,
+    cookie: {
+        expires: 60 * 60 * 24 // expires in 24hrs
+    },
 })); 
 
 // Routes
-app.use('/', routes);
+app.use('/user', userRoute);
+app.use('/login', authRoute);
+// app.use('/', routes);
 // Login
-app.use('/login', routes);
+// app.use('/login', routes);
 // create user
-app.use('/register', routes);
+// app.use('/register', routes);
 // Update user
-
-
-// const db = require('./models');
-// db.sequelize.sync();
-
-// const db = require('./database');
-
-// Routes
-// app.get('/', (req, res) => {
-//     res.json({ message: "Testing..." });
-// });
-
-// app.post('/createuser', (req, res) => {
-//     db.query("INSERT INTO users (first_name, last_name, username, email, password) VALUES (?,?,?,?,?)", [firstName, lastName, username, email, password], (err, res) => {
-//         console.log(err);
-//     });
-// });
-
-// app.post('/login', (req, res) => {
-//     const username = req.body.username;
-//     const password = req.body.password;
-//     db.query(
-//         "SELECT * FROM users WHERE username = ? AND password = ?",
-//         [username, password],
-//         (err, result) => {
-//             if (err) {
-//                 res.send({err: err})
-//             }
-
-//             if (result.length > 0) {
-//                 res.send(result);
-//             } else {
-//                 res.send({ message: "Wrong username/password combination!" });
-//             }
-//         }
-//     );
-// });
-
-// Routers
-// const usersRoute = require('./routes/users');
-// app.use('/auth', usersRoute);
-
-// app.get('/', (req, res) => {
-//     res.send(200);
-// });
-
-// app.post('/login', (req, res) => {
-//     console.log('hello');
-//     res.send(200);
-// })
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`)
