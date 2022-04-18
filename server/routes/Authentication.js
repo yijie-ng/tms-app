@@ -2,10 +2,12 @@ const { Router } = require('express');
 const controllers = require('../controllers');
 const router = Router();
 
-// GET - 
-router.get('/', controllers.loginSession);
+// POST - Login user
+router.post('/login', controllers.login);
 
-// POST
-router.post('/', controllers.login);
+// POST - Create User
+router.post('/register', controllers.createUser);
+
+// GET - Log out user
 
 module.exports = router;

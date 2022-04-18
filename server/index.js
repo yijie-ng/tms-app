@@ -35,8 +35,8 @@ app.use(session({
 })); 
 
 // Routes
-app.use('/user', userRoute);
-app.use('/login', authRoute);
+// app.use('/user', userRoute);
+app.use('/api/auth', authRoute);
 // app.use('/', routes);
 // Login
 // app.use('/login', routes);
