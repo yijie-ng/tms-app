@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '../assets/Login.css'
-// import { response } from 'express';
-// import res from 'express/lib/response';
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -16,7 +14,7 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:3001/login', {
+        axios.post('http://localhost:3001/api/auth/login', {
             username: username,
             password: password,
         }).then((response) => {

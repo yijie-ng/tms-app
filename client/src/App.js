@@ -12,9 +12,12 @@ function App() {
     <div className="App">
       <Navbar />
         <Routes>
+          {/* public routes */}
           <Route path="/" element={ <Home/> } />
-          <Route path="/dashboard" element={ <Dashboard/> } />
           <Route path="/login" element={ <Login/> } />
+
+          {/* protected routes */}
+          <Route path="/dashboard" element={ <Dashboard/> } />
           <Route path="/register" element={ <Register/> } />
         </Routes>
     </div>
