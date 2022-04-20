@@ -1,16 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from 'axios';
-import '../assets/Login.css'
+import '../assets/Login.css';
+import useAuth from '../hooks/useAuth';
 
 function Login() {
+    const { setAuth } = useAuth();
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     
     const [errMsg, setErrMsg] = useState("");
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/dashboard";
 
     axios.defaults.withCredentials = true;
+
+    // const handleSubmit = async (e) => {
+    //   e.preventDefault();
+
+    //   try {
+    //     const response = await axios.post('http://localhost:3001/api/auth/login', {
+    //       username: username,
+    //       password: password
+    //     });
+    //     console.log(response?.data);
+    //     const accessToken = response?.data?.accessToken;
+    //     setAuth({ username, password, accessToken });
+    //     if (accessToken.length > 0) {
+    //       navigate('/dashboard');
+    //     };
+    //   } catch (err) {
+    //     if (!err?.response) {
+    //       setErrMsg(err.response);
+    //       console.log(err);
+    //     } 
+    //   }
+    // };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -19,10 +46,14 @@ function Login() {
             password: password,
         }).then((response) => {
             if (response.data.message === "Login successful!") {
-              navigate('/dashboard')
+              const accessToken = response?.data?.accessToken;
+              const userRole = response?.data?.role;
+              setAuth({ username, password, userRole, accessToken });
+              navigate(from, { replace: true });
             } else {
               setErrMsg(response.data.message);
             }
+            console.log(response?.data);
         });
     };
 

@@ -1,5 +1,16 @@
-// import { createContext, useState } from "react";
+import { createContext, useState } from "react";
 
-// const AuthContext = createContext({});
+const AuthContext = createContext({});
 
-// export const AuthProvider = ({ children }) // destructure the children
+// destructure the children, which are the components nested inside authProvider
+export const AuthProvider = ({ children }) => {
+    const [auth, setAuth] = useState({});
+
+    return (
+        <AuthContext.Provider value={{ auth, setAuth }}>
+            {children}
+        </AuthContext.Provider>
+    )
+}
+
+export default AuthContext;
