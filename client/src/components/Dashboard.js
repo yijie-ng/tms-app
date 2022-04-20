@@ -8,7 +8,7 @@ function Dashboard() {
   return (
     <div className='container'>
       <h2>Hello, {auth.username}!</h2>
-      <Link to="/register">Add User</Link>
+      <Link to="/register" className="btn btn-primary" role="button">Add User</Link>
     </div>
   )
 }
