@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import useAuth from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 function Navbar() {
     const { auth, setAuth } = useAuth();
     const handleLogout = () => {
         setAuth(null);
+        localStorage.clear();
     }
 
     return (
@@ -15,36 +17,48 @@ function Navbar() {
         //     </button>
         //     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         //         <ul className="navbar-nav mr-auto">
-        //             {auth?.userRole.includes('Admin')
-                       
-        //             }
-                    
         //         </ul>
         //     </div>
         // </nav>
         // <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        //     <ul className="navbar-nav mr-auto">
-        //         <li className="nav-item dropdown">
-        //             <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
-        //             User Management
-        //             </a>
-        //             <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-        //                 {/*put router link here*/}
-        //             <a className="dropdown-item" href="#">Update Email/Password</a>
-        //             <a className="dropdown-item" href="#">Add New User</a>
-        //             </div>
-        //         </li>
-        //         <li>
-        //             <button className="btn btn-danger my-2 my-sm-0">Sign Out</button>
-        //         </li>
-        //     </ul>
+
         // </div>
-        auth?.username 
-            ? <nav className="navbar navbar-dark bg-primary mb-4">
+        auth?.username
+            ? <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
                 {/*put router link here*/}
                 <a className="navbar-brand" href="#">Task Management App</a>
-
-                <button className="btn btn-danger my-2 my-sm-0" onClick={handleLogout}>Sign Out</button>
+                {auth.userRole === 'Admin' ?
+                    <ul className="navbar-nav mr-auto">
+                        <li className="nav-item">
+                            <Link to="/dashboard" className="nav-link">Dashboard</Link>
+                        </li>
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                            User Management
+                            </a>
+                            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {/*put router link here*/}
+                                <Link to="/update/user" className="dropdown-item">Update Email/Password</Link>
+                                <Link to="/register" className="dropdown-item">Add New User</Link>
+                                <a className="dropdown-item" href="#">Add New Group</a>
+                            </div>
+                        </li>
+                    </ul> : 
+                    <ul className="navbar-nav mr-auto">
+                        <li className="nav-item">
+                            <Link to="/dashboard" className="nav-link">Dashboard</Link>
+                        </li>
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                            User Management
+                            </a>
+                            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {/*put router link here*/}
+                                <Link to="#" className="dropdown-item">Update Email/Password</Link>
+                            </div>
+                        </li>
+                    </ul>}
+                    <button className="btn btn-danger my-2 my-sm-0" onClick={handleLogout}>Sign Out</button>
               </nav>
             : <nav className="navbar navbar-dark bg-primary mb-4">
                 {/*put router link here*/}

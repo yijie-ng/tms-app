@@ -5,12 +5,13 @@ import '../assets/Login.css';
 import useAuth from '../hooks/useAuth';
 
 function Login() {
-    const { setAuth } = useAuth();
+    const { auth, setAuth } = useAuth();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     
     const [errMsg, setErrMsg] = useState("");
+    const [successMsg, setSuccessMsg] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/dashboard";
@@ -48,7 +49,10 @@ function Login() {
             if (response.data.message === "Login successful!") {
               const accessToken = response?.data?.accessToken;
               const userRole = response?.data?.role;
-              setAuth({ username, password, userRole, accessToken });
+              const id = response?.data?.id;
+              setAuth({ id, username, password, userRole, accessToken });
+              // localStorage.setItem('user', auth);
+              setSuccessMsg(response.data.message);
               navigate(from, { replace: true });
             } else {
               setErrMsg(response.data.message);
@@ -56,6 +60,10 @@ function Login() {
             console.log(response?.data);
         });
     };
+
+    // useEffect(() => {
+      
+    // })
 
     // useEffect(() => {
     //   axios.get('http://localhost:3001/login').then((response) => {
@@ -70,9 +78,13 @@ function Login() {
           <div className='form-login'>
             <h2 className='text-center mt-4'>Sign In</h2>
             <form onSubmit={handleSubmit}>
-              <div className={errMsg ? "alert alert-danger" : "offscreen"} role="alert">
-                {errMsg}
-              </div>
+              {successMsg ? 
+                <div className={successMsg ? "alert alert-success" : "offscreen"} role="alert">
+                  {successMsg}
+                </div> :               
+                <div className={errMsg ? "alert alert-danger" : "offscreen"} role="alert">
+                  {errMsg}
+                </div>}
               <div className="form-group mt-3">
                 <label htmlFor="username">Username:</label>
                 <input 

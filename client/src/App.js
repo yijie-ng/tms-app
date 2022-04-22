@@ -8,6 +8,7 @@ import Register from './components/Register';
 import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import Unauthorized from './components/Unauthorized';
+import UpdateUser from './components/UpdateUser';
 
 function App() {
   return (
@@ -18,10 +19,12 @@ function App() {
           <Route path="/" element={ <Home /> } />
           <Route path="/login" element={ <Login /> } />
           <Route path="/unauthorized" element={ <Unauthorized />} />
+          {/* <Route path="/register" element={ <Register /> } /> */}
 
           {/* protected routes */}
           <Route element={<RequireAuth allowedRoles={['Admin', 'User']} />}>
             <Route path="/dashboard" element={ <Dashboard /> } />
+            <Route path="/update/user" element={ <UpdateUser />} />
           </Route>
 
           <Route element={<RequireAuth allowedRoles={['Admin']} />}>  
