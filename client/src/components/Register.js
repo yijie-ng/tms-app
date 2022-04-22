@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../assets/Login.css';
 import axios from 'axios';
+import MultiSelect from 'react-multiple-select-dropdown-lite';
+import 'react-multiple-select-dropdown-lite/dist/index.css';
 
 function Register() {
     const [firstName, setFirstName] = useState("");
@@ -9,9 +11,32 @@ function Register() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    // const [roles, getRoles] = useState("");
     const [userRole, setUserRole] = useState("");
     const [userTitle, setUserTitle] = useState("");
+    const [userGroup, setUserGroup] = useState("");
+
+    const [userGroupData, setUserGroupData] = useState([]); 
+    const [userRoleData, setUserRoleData] = useState([]);
+    const [userTitleData, setUserTitleData] = useState([]);
+
+    const options = [];
+    userGroupData.map((data) => {
+      const option = {
+        label: data.group_name,
+        value: data.group_name
+      };
+      options.push(option);
+    });
+
+    // const [groupValue, setGroupValue] = useState("");
+
+    const handleOnchange = val => {
+      setUserGroup(val.split(","));
+    };
+
+    console.log(userGroup);
+
+    // setUserGroup(groupValue.split(","));
 
     const [msg, setMsg] = useState("");
     const navigate = useNavigate();
@@ -28,6 +53,7 @@ function Register() {
             password: password,
             userRole: userRole,
             userTitle: userTitle,
+            userGroup: userGroup
         }).then((response) => {
             if (response.data.message === "User created successfully!") {
               setMsg(response.data.message);
@@ -37,6 +63,24 @@ function Register() {
             }
         }); 
     };
+
+    useEffect(() => {
+      axios.get('http://localhost:3001/api/user-groups').then((response) => {
+        setUserGroupData(response.data);
+      })
+    }, []);
+
+    useEffect(() => {
+      axios.get('http://localhost:3001/api/user-roles').then((response) => {
+        setUserRoleData(response.data);
+      })
+    }, []);
+
+    useEffect(() => {
+      axios.get('http://localhost:3001/api/user-titles').then((response) => {
+        setUserTitleData(response.data);
+      })
+    }, []);
 
     // const getAllUserRoles = () => {
     //   axios.get('http://localhost:3001/api/user-roles').then((response) => {
@@ -107,8 +151,11 @@ function Register() {
                   setUserRole(e.target.value);
                 }}>
                   <option value="">Choose role!</option>
-                  <option value='Admin'>Admin</option>
-                  <option value='User'>User</option>
+                  {userRoleData.map((data) => {
+                    return (
+                      <option value={data.role}>{data.role}</option>
+                    )
+                  })}
                 </select>
               </div>
               <div className='form-group'>
@@ -117,10 +164,26 @@ function Register() {
                   setUserTitle(e.target.value);
                 }}>
                   <option value="">Choose title!</option>
-                  <option value='Engineer'>Engineer</option>
-                  <option value='Project Manager'>Project Manager</option>
-                  <option value='Project Lead'>Project Lead</option>
+                  {userTitleData.map((data) => {
+                    return (
+                      <option value={data.title}>{data.title}</option>
+                    )
+                  })}
                 </select>
+              </div>
+              <div className='form-group'>
+                <label htmlFor="group_name">Group</label>
+                <MultiSelect options={options} onChange={handleOnchange}/>
+                {/* <select className="form-control" id="group_name" required onChange={(e) => {
+                  setUserGroup(e.target.value);
+                }}>
+                  <option value="">Choose group!</option>
+                  {userGroupData.map((data) => {
+                    return (
+                      <option value={data.group_name}>{data.group_name}</option>
+                    )
+                  })}
+                </select> */}
               </div>
               <button type="submit" className="btn btn-primary btn-block">Submit</button>
             </form>
