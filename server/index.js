@@ -9,11 +9,14 @@ const cookieParser = require('cookie-parser');
 
 const userRoute = require('./routes/User');
 const authRoute = require('./routes/Authentication');
+const userGroupsRoute = require('./routes/UserGroup');
+const userRolesRoute = require('./routes/UserRoles');
+const userTitlesRoute = require('./routes/UserTitles');
 
 app.use(express.json());
 app.use(cors({
     origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT'],
     credentials: true
 }));
 
@@ -35,14 +38,12 @@ app.use(session({
 })); 
 
 // Routes
-// app.use('/user', userRoute);
-app.use('/api/auth', authRoute);
-// app.use('/', routes);
-// Login
-// app.use('/login', routes);
-// create user
-// app.use('/register', routes);
-// Update user
+app.use('/users', userRoute); // Update, get user(s)
+app.use('/api/auth', authRoute); // Login, log out, register user
+app.use('/api/user-groups', userGroupsRoute); // get all user groups
+app.use('/api/user-roles', userRolesRoute); // get all user roles 
+app.use('/api/user-titles', userTitlesRoute);
+
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`)

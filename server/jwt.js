@@ -4,7 +4,9 @@ dotenv.config();
 
 const createToken = (user) => {
     const accessToken = sign(
-        { username: user.username },
+        { username: user.username,
+          role: user.user_role
+        },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: 86400 }
     );
