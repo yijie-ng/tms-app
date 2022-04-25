@@ -24,7 +24,6 @@ function Dashboard() {
             <div className="mt-4">
               <div>
                 <h4 className="mt-3 mb-2"><b>All Users</b></h4>
-                <Link to="/register" className="btn btn-success" role="button">Add User</Link>
               </div>
               <Users />
             </div>

@@ -37,9 +37,8 @@ function Navbar() {
                         User Management
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <Link to="/update/user" className="dropdown-item">Update Email/Password</Link>
                             <Link to="/register" className="dropdown-item">Add New User</Link>
-                            <a className="dropdown-item" href="#">Add New Group</a>
+                            <Link to="/admin/new-group" className="dropdown-item">Create New Group</Link>
                         </div>
                     </li>
                 </ul> : 
