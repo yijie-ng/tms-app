@@ -28,15 +28,9 @@ function Register() {
       options.push(option);
     });
 
-    // const [groupValue, setGroupValue] = useState("");
-
     const handleOnchange = val => {
       setUserGroup(val.split(","));
     };
-
-    console.log(userGroup);
-
-    // setUserGroup(groupValue.split(","));
 
     const [msg, setMsg] = useState("");
     const navigate = useNavigate();
@@ -100,7 +94,7 @@ function Register() {
           <div className='form-login mb-4'>
             <h2 className="text-center mt-4">Create New User</h2>
             <form onSubmit={handleSubmit}>
-              <div className={msg ? "alert alert-danger" : "offscreen"} role="alert">
+              <div className={msg ? "alert alert-info" : "offscreen"} role="alert">
                   {msg}
               </div>
               <div className="form-group mt-3">
@@ -153,7 +147,7 @@ function Register() {
                   <option value="">Choose role!</option>
                   {userRoleData.map((data) => {
                     return (
-                      <option value={data.role}>{data.role}</option>
+                      <option key={data.role} value={data.role}>{data.role}</option>
                     )
                   })}
                 </select>
@@ -166,7 +160,7 @@ function Register() {
                   <option value="">Choose title!</option>
                   {userTitleData.map((data) => {
                     return (
-                      <option value={data.title}>{data.title}</option>
+                      <option key={data.title} value={data.title}>{data.title}</option>
                     )
                   })}
                 </select>
@@ -174,16 +168,6 @@ function Register() {
               <div className='form-group'>
                 <label htmlFor="group_name">Group</label>
                 <MultiSelect options={options} onChange={handleOnchange}/>
-                {/* <select className="form-control" id="group_name" required onChange={(e) => {
-                  setUserGroup(e.target.value);
-                }}>
-                  <option value="">Choose group!</option>
-                  {userGroupData.map((data) => {
-                    return (
-                      <option value={data.group_name}>{data.group_name}</option>
-                    )
-                  })}
-                </select> */}
               </div>
               <button type="submit" className="btn btn-primary btn-block">Submit</button>
             </form>

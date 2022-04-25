@@ -21,45 +21,49 @@ function User() {
   };
 
   return (
-    <table className="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">First Name</th>
-          <th scope="col">Last Name</th>
-          <th scope="col">Username</th>
-          <th scope="col">Email</th>
-          <th scope="col">Title</th>
-          <th scope="col">User Role</th>
-          <th scope="col">Status</th>
-          <th scope="col">Update</th>
-        </tr>
-      </thead>
-      <tbody>
-        {userData.map((data) => {
-          return (
-            <tr>
-              <td>{data.firstName}</td>
-              <td>{data.lastName}</td>
-              <td>{data.username}</td>
-              <td>{data.email}</td>
-              <td>{data.user_title}</td>
-              <td>{data.user_role}</td>
-              <td>{data.status}</td>
-              <td>
-                <Link to="/update/user">
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => setData(data)}
-                  >
-                    Update
-                  </button>
-                </Link>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <div className="table-responsive-xl">
+      <table className="table table-hover">
+        <thead className="thead-dark">
+          <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Username</th>
+            <th scope="col">Email</th>
+            <th scope="col">Title</th>
+            <th scope="col">User Group</th>
+            <th scope="col">User Role</th>
+            <th scope="col">Status</th>
+            <th scope="col">Update</th>
+          </tr>
+        </thead>
+        <tbody>
+          {userData.map((data) => {
+            return (
+              <tr key={data.id}>
+                <td>{data.firstName}</td>
+                <td>{data.lastName}</td>
+                <td>{data.username}</td>
+                <td>{data.email}</td>
+                <td>{data.user_title}</td>
+                <td>{null}</td>
+                <td>{data.user_role}</td>
+                <td>{data.status}</td>
+                <td>
+                  <Link to="/update/user">
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => setData(data)}
+                    >
+                      Update
+                    </button>
+                  </Link>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

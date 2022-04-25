@@ -26,7 +26,7 @@ function Navbar() {
         auth?.username
             ? <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
                 {/*put router link here*/}
-                <a className="navbar-brand" href="#">Task Management App</a>
+                <Link to="/" className="navbar-brand">Task Management App</Link>
                 {auth.userRole === 'Admin' ?
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item">

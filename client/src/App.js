@@ -9,6 +9,7 @@ import Navbar from './components/Navbar';
 import RequireAuth from './components/RequireAuth';
 import Unauthorized from './components/Unauthorized';
 import UpdateUser from './components/UpdateUser';
+import AdminUpdateUser from './components/AdminUpdateUser';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
 
           <Route element={<RequireAuth allowedRoles={['Admin']} />}>  
             <Route path="/register" element={ <Register /> } />
+            <Route path="/admin/update/user" element={ <AdminUpdateUser /> } />
           </Route>
         </Routes>
     </div>

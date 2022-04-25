@@ -56,7 +56,7 @@ function UpdateUser() {
               </div>
               <button type="submit" className="btn btn-primary btn-block">Save</button>
             </form>
-            <form onSubmit={updateUserPassword}>
+            <form className="mt-3" onSubmit={updateUserPassword}>
               <div className="form-group">
                 <label htmlFor="password">Password</label>
                   <input 

@@ -40,6 +40,8 @@ function Login() {
     //   }
     // };
 
+    const [user, setUser] = useState();
+
     const handleSubmit = (e) => {
         e.preventDefault();
         axios.post('http://localhost:3001/api/auth/login', {
@@ -51,8 +53,9 @@ function Login() {
               const userRole = response?.data?.role;
               const id = response?.data?.id;
               setAuth({ id, username, password, userRole, accessToken });
-              // localStorage.setItem('user', auth);
-              setSuccessMsg(response.data.message);
+              // setUser(response.data);
+              // localStorage.setItem('user', response.data);
+              // setSuccessMsg(response.data.message);
               navigate(from, { replace: true });
             } else {
               setErrMsg(response.data.message);
@@ -62,8 +65,12 @@ function Login() {
     };
 
     // useEffect(() => {
-      
-    // })
+    //   const loggedInUser = localStorage.getItem("user");
+    //   if (loggedInUser) {
+    //     const foundUser = JSON.parse(loggedInUser);
+    //     setUser(foundUser);
+    //   }
+    // }, []);
 
     // useEffect(() => {
     //   axios.get('http://localhost:3001/login').then((response) => {
