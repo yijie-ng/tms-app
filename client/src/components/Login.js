@@ -52,7 +52,8 @@ function Login() {
               const accessToken = response?.data?.accessToken;
               const userRole = response?.data?.role;
               const id = response?.data?.id;
-              setAuth({ id, username, password, userRole, accessToken });
+              const userStatus = response?.data?.userStatus;
+              setAuth({ id, username, userRole, userStatus, accessToken });
               // setUser(response.data);
               // localStorage.setItem('user', response.data);
               // setSuccessMsg(response.data.message);

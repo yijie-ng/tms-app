@@ -31,61 +31,14 @@ const Users = () => {
     setID(localStorage.getItem("ID"));
   }, []);
 
-  // put user's user groups into an array from database, then turn array into string/list?
-  // if user_group_users.username === users.username
-  // display <li>user_group_users.group_name</li>
+
   const [usersGroupData, setUsersGroupData] = useState([]);
+
   useEffect(() => {
       axios.get("http://localhost:3001/api/usersgroups").then((response) => {
           setUsersGroupData(response.data);
       });
   });
-
-//   const handleSubmit = () => {
-//     axios
-//       .put(`http://localhost:3001/users/update-status/${id}`, {
-//         userStatus: userStatus,
-//       })
-//       .then((response) => {
-//         if (response.data.message === "Status updated!") {
-//           alert(response.data.message);
-//         } else {
-//           alert(response.data.message);
-//         }
-//       });
-//   };
-
-  //   const [usersGroupData, setUsersGroupData] = useState([]);
-
-  //   useEffect(() => {
-  //       usersData.map((users) => {
-  //         axios.get(`http://localhost:3001/api/user-groups/${users.username}`).then((response) => {
-  //             console.log(response.data);
-  //         });
-  //       });
-  //   }, []);
-
-  //   usersData.map((users) => {
-  //     axios
-  //       .get(`http://localhost:3001/api/user-groups/${users.username}`)
-  //       .then((response) => {
-  //         console.log(response);
-  //       });
-  //   });
-
-  //   axios
-  //     .get(`http://localhost:3001/api/user-groups/${users.username}`)
-  //     .then((response) => {
-  //       if (response.data.length > 0) {
-  //         response.data.map((group) => {
-  //           <ul>
-  //             <li>{group.group_name}</li>
-  //           </ul>;
-  //         });
-  //       } else {
-  //         return null;
-  //       }
-  //     });
 
   return (
     <div className="table-responsive-xl">
@@ -122,6 +75,8 @@ const Users = () => {
                         )
                     } else null
                   })}
+                    <button className="btn btn-success btn-sm btn-block">Add</button>
+                    <button className="btn btn-danger btn-sm btn-block">Remove</button>
                 </td>
                 <td>{users.user_role}</td>
                 <td>
@@ -153,7 +108,7 @@ const Users = () => {
                 <td>
                   <Link to="/admin/update/user">
                     <button
-                      className="btn btn-warning"
+                      className="btn btn-success"
                       onClick={() => setData(users)}
                     >
                       Update

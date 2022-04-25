@@ -20,6 +20,14 @@ function User() {
     localStorage.setItem("Email", email);
   };
 
+  const [usersGroupData, setUsersGroupData] = useState([]);
+  
+  useEffect(() => {
+      axios.get("http://localhost:3001/api/usersgroups").then((response) => {
+          setUsersGroupData(response.data);
+      });
+  });
+
   return (
     <div className="table-responsive-xl">
       <table className="table table-hover">
@@ -45,13 +53,21 @@ function User() {
                 <td>{data.username}</td>
                 <td>{data.email}</td>
                 <td>{data.user_title}</td>
-                <td>{null}</td>
+                <td>{usersGroupData.map((group) => {
+                    if (group.username === data.username) {
+                        return (
+                            <ul>
+                                <li key={data.id}>{group.group_name}</li>
+                            </ul>
+                        )
+                    } else null
+                  })}</td>
                 <td>{data.user_role}</td>
                 <td>{data.status}</td>
                 <td>
                   <Link to="/update/user">
                     <button
-                      className="btn btn-warning"
+                      className="btn btn-success"
                       onClick={() => setData(data)}
                     >
                       Update
