@@ -40,9 +40,9 @@ app.use(session({
 // Routes
 app.use('/users', userRoute); // Update, get user(s)
 app.use('/api/auth', authRoute); // Login, log out, register user
-app.use('/api/user-groups', userGroupsRoute); // get all user groups
+app.use('/api', userGroupsRoute); // user groups
 app.use('/api/user-roles', userRolesRoute); // get all user roles 
-app.use('/api/user-titles', userTitlesRoute);
+app.use('/api', userTitlesRoute);
 
 
 app.listen(port, () => {
