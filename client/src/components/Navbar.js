@@ -38,7 +38,7 @@ function Navbar() {
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <Link to="/register" className="dropdown-item">Add New User</Link>
-                            <Link to="/admin/new-group" className="dropdown-item">Create New Group</Link>
+                            <Link to="/admin/new-group" className="dropdown-item">Create New Project Group</Link>
                         </div>
                     </li>
                 </ul> : 
@@ -46,14 +46,14 @@ function Navbar() {
                     <li className="nav-item">
                         <Link to="/dashboard" className="nav-link">Dashboard</Link>
                     </li>
-                    <li className="nav-item dropdown">
+                    {/* <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
                         User Management
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <Link to="#" className="dropdown-item">Update Email/Password</Link>
                         </div>
-                    </li>
+                    </li> */}
                 </ul>}
                 <button className="btn btn-danger my-2 my-sm-0" onClick={handleLogout}>Sign Out</button>
               </nav>

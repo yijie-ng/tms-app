@@ -40,7 +40,7 @@ function Login() {
     //   }
     // };
 
-    const [user, setUser] = useState();
+    // const [user, setUser] = useState();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -78,6 +78,12 @@ function Login() {
     //     console.log(response);
     //   })
     // });
+
+    // if (user) {
+    //   return (
+    //     <div className="container">{user.username} is logged in!</div>
+    //   )
+    // };
 
   return (
     <div className='container'>

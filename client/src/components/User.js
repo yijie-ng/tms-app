@@ -7,12 +7,25 @@ function User() {
   const { auth } = useAuth();
   const userId = auth.id;
   const [userData, setUserData] = useState([]);
+  const [userTitleData, setUserTitleData] = useState([]);
+  const [networkStatus, setNetworkStatus] = useState("pending");
+
+  axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/users/${userId}`).then((response) => {
-      setUserData(response.data);
-    });
-  }, []);
+      const getData = async () => {
+          try {
+            const getUser = await axios.get(`http://localhost:3001/users/${userId}`);
+            const userTitles = await axios.get("http://localhost:3001/api/users-titles");
+            setUserData(getUser.data);
+            setUserTitleData(userTitles.data);
+            setNetworkStatus("resolved");
+          } catch (error) {
+              console.log("error", error);
+          }
+      };
+      getData();
+   }, []);
 
   const setData = (data) => {
     let { id, email } = data;
@@ -20,66 +33,63 @@ function User() {
     localStorage.setItem("Email", email);
   };
 
-  const [usersGroupData, setUsersGroupData] = useState([]);
-  
-  useEffect(() => {
-      axios.get("http://localhost:3001/api/usersgroups").then((response) => {
-          setUsersGroupData(response.data);
-      });
-  });
-
   return (
-    <div className="table-responsive-xl">
-      <table className="table table-hover">
-        <thead className="thead-dark">
-          <tr>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
-            <th scope="col">Username</th>
-            <th scope="col">Email</th>
-            <th scope="col">Title</th>
-            <th scope="col">User Group</th>
-            <th scope="col">User Role</th>
-            <th scope="col">Status</th>
-            <th scope="col">Update</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userData.map((data) => {
-            return (
-              <tr key={data.id}>
-                <td>{data.firstName}</td>
-                <td>{data.lastName}</td>
-                <td>{data.username}</td>
-                <td>{data.email}</td>
-                <td>{data.user_title}</td>
-                <td>{usersGroupData.map((group) => {
-                    if (group.username === data.username) {
-                        return (
-                            <ul>
-                                <li key={data.id}>{group.group_name}</li>
-                            </ul>
-                        )
-                    } else null
-                  })}</td>
-                <td>{data.user_role}</td>
-                <td>{data.status}</td>
-                <td>
-                  <Link to="/update/user">
-                    <button
-                      className="btn btn-success"
-                      onClick={() => setData(data)}
-                    >
-                      Update
-                    </button>
-                  </Link>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    <>
+    {networkStatus === "resolved" ? (
+        <div className="table-responsive-xl">
+        <table className="table table-hover">
+            <thead className="thead-dark">
+            <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col">Project Roles</th>
+                <th scope="col">Project Groups</th>
+                <th scope="col">User Role</th>
+                <th scope="col">Status</th>
+                <th scope="col">Update User</th>
+            </tr>
+            </thead>
+            <tbody>
+            {userData.map((data) => {
+                return (
+                <tr key={data.id}>
+                    <td>{data.firstName}</td>
+                    <td>{data.lastName}</td>
+                    <td>{data.username}</td>
+                    <td>{data.email}</td>
+                    {/* <td>Insert project roles</td> */}
+                    <td>{userTitleData.map((titleData) => {
+                        if (titleData.username === data.username && (titleData.status === "assigned")) {
+                            return (
+                                <ul>
+                                    <li key={titleData.id}>{titleData.user_title}</li>
+                                </ul>
+                            )
+                        } else null
+                    })}</td>
+                    <td>Insert project group</td>
+                    <td>{data.user_role}</td>
+                    <td>{data.status}</td>
+                    <td>
+                    <Link to="/update/user">
+                        <button
+                        className="btn btn-success"
+                        onClick={() => setData(data)}
+                        >
+                        Update
+                        </button>
+                    </Link>
+                    </td>
+                </tr>
+                );
+            })}
+            </tbody>
+        </table>
+        </div>
+    ) : null}
+    </>
   );
 }
 
