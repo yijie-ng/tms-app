@@ -9,9 +9,9 @@ const cookieParser = require('cookie-parser');
 
 const userRoute = require('./routes/User');
 const authRoute = require('./routes/Authentication');
-const userGroupsRoute = require('./routes/UserGroup');
 const userRolesRoute = require('./routes/UserRoles');
 const userTitlesRoute = require('./routes/UserTitles');
+// const userGroupsRoute = require('./routes/UserGroup');
 
 app.use(express.json());
 app.use(cors({
@@ -38,11 +38,11 @@ app.use(session({
 })); 
 
 // Routes
-app.use('/users', userRoute); // Update, get user(s)
-app.use('/api/auth', authRoute); // Login, log out, register user
-app.use('/api', userGroupsRoute); // user groups
+app.use('/users', userRoute); // Update, get user(s), create user
+app.use('/api/auth', authRoute); // Login, log out user
 app.use('/api/user-roles', userRolesRoute); // get all user roles 
-app.use('/api', userTitlesRoute);
+app.use('/api', userTitlesRoute); // user's user groups (project roles)
+// app.use('/api', userGroupsRoute); // users' project groups
 
 
 app.listen(port, () => {
