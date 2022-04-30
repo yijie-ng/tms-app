@@ -8,11 +8,22 @@ const createToken = (user) => {
           role: user.user_role
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: 86400 }
+        { expiresIn: 1800 }
     );
 
     return accessToken;
 };
+
+// const createRefreshToken = (user) => {
+//     const refreshToken = sign(
+//         {
+//             username: user.username,
+//             role: user.user_role
+//         },
+//         process.env.REFRESH_TOKEN_SECRET,
+//         { expiresIn: '1d' }
+//     );
+// }
 
 const validateToken = (req, res, next) => {
     const accessToken = req.cookies["access-token"];

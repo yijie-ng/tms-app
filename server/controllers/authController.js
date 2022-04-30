@@ -19,7 +19,7 @@ const login = (req, res) => {
             const userStatus = user.status;
             bcrypt.compare(password, user.password, (err, result) => {
               if (result) {
-              //   req.session.user = user;
+                // req.session.user = user;
                 // Attach token to user if logged in
                 const accessToken = createToken(user);
                 res.cookie("access-token", accessToken, {
@@ -45,6 +45,15 @@ const login = (req, res) => {
     );
   };
 
+const logout = (req, res) => {
+  res.clearCookie("access-token", {
+    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 1000
+  });
+  res.sendStatus(204);
+};
+
   module.exports = {
       login,
+      logout
   }
