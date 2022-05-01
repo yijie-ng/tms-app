@@ -8,8 +8,7 @@ import Disabled from "./Disabled";
 
 function Dashboard() {
   const { auth } = useAuth();
-  console.log(auth);
-
+  
   return (
     <div className="container">
       {auth.userStatus === 'active' 
@@ -22,9 +21,7 @@ function Dashboard() {
            </div>
            {auth.userRole === "Admin" ? (
             <div className="mt-4">
-              <div>
-                <h4 className="mt-3 mb-2"><b>All Users</b></h4>
-              </div>
+              <h4 className="mt-3 mb-2"><b>All Users</b></h4>
               <Users />
             </div>
           ) : null}

@@ -45,7 +45,7 @@ function User() {
                 <th scope="col">Username</th>
                 <th scope="col">Email</th>
                 <th scope="col">Project Roles</th>
-                <th scope="col">Project Groups</th>
+                {/* <th scope="col">Project Groups</th> */}
                 <th scope="col">User Role</th>
                 <th scope="col">Status</th>
                 <th scope="col">Update User</th>
@@ -63,19 +63,19 @@ function User() {
                     <td>{userTitleData.map((titleData) => {
                         if (titleData.username === data.username && (titleData.status === "assigned")) {
                             return (
-                                <ul>
+                                <>
                                     <li key={titleData.id}>{titleData.user_title}</li>
-                                </ul>
+                                </>
                             )
                         } else null
                     })}</td>
-                    <td>Insert project group</td>
+                    {/* <td>Insert project group</td> */}
                     <td>{data.user_role}</td>
                     <td>{data.status}</td>
                     <td>
                     <Link to="/update/user">
                         <button
-                        className="btn btn-success"
+                        className="btn btn-warning"
                         onClick={() => setData(data)}
                         >
                         Update

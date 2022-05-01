@@ -51,22 +51,6 @@ const Users = () => {
 //     });
 //   }, []);
 
-//   const [usersTitleData, setUsersTitleData] = useState([]);
-
-//   useEffect(() => {
-//     axios.get("http://localhost:3001/api/users-titles").then((response) => {
-//       setUsersTitleData(response.data);
-//     });
-//   }, []);
-  
-//   const [userTitleData, setUserTitleData] = useState([]);
-
-//   useEffect(() => {
-//     axios.get("http://localhost:3001/api/user-titles").then((response) => {
-//       setUserTitleData(response.data);
-//     });
-//   }, []);
-
   return (
       <>
       {networkStatus === "resolved" ? (
@@ -79,7 +63,7 @@ const Users = () => {
                 <th scope="col">Username</th>
                 <th scope="col">Email</th>
                 <th scope="col">Project Roles</th>
-                <th scope="col">Project Groups</th>
+                {/* <th scope="col">Project Groups</th> */}
                 <th scope="col">User Role</th>
                 <th scope="col">Status</th>
                 <th scope="col">Update User</th>
@@ -96,35 +80,12 @@ const Users = () => {
                     <td>{userTitlesData.map((titleData) => {
                         if (titleData.username === users.username && (titleData.status === "assigned")) {
                             return (
-                                <ul>
+                                <>
                                     <li key={titleData.id}>{titleData.user_title}</li>
-                                </ul>
+                                </>
                             )
                         } else null
                     })}</td>
-                    {/* <td>Insert project roles</td> */}
-                    <td>Insert project groups</td>
-                    {/* <td>{usersTitleData.map((title) => {
-                        if (title.username === users.username) {
-                            return (
-                                <li key={title.id}>{title.user_title}</li>
-                            )
-                        } else null;
-                    })}</td> */}
-                    {/* <td>
-                    {userTitleData.map((titleData) => {
-                        axios
-                        .get(
-                            `http://localhost:3001/api/checkgroup/${titleData.title}/${users.username}`
-                        )
-                        .then((response) => {
-                            // console.log(response.data);
-                            if (response.data.isInGroup === "Yes") {
-                            return <li>{titleData.title}</li>;
-                            } else null;
-                        });
-                    })}
-                    </td> */}
                     {/* <td>
                     {usersGroupData.map((group) => {
                         if (group.username === users.username) {
@@ -143,7 +104,7 @@ const Users = () => {
                     <td>
                     <Link to="/admin/update/user">
                         <button
-                        className="btn btn-success"
+                        className="btn btn-warning"
                         onClick={() => setData(users)}
                         >
                         Update

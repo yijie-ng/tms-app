@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import useAuth from "../hooks/useAuth";
 import { Link } from "react-router-dom";
+import axios from 'axios';
 
 function Navbar() {
     const { auth, setAuth } = useAuth();
+    
     const handleLogout = () => {
         setAuth(null);
         localStorage.clear();
-    }
+        axios.get("http://localhost:3001/api/auth/logout");
+    };
 
     return (
         // <nav className="navbar navbar-dark bg-primary mb-4">
@@ -38,7 +41,6 @@ function Navbar() {
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <Link to="/register" className="dropdown-item">Add New User</Link>
-                            <Link to="/admin/new-group" className="dropdown-item">Create New Project Group</Link>
                         </div>
                     </li>
                 </ul> : 

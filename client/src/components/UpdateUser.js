@@ -24,6 +24,7 @@ function UpdateUser() {
             email
         }).then((response) => {
             if (response.data.message === 'Email updated!') {
+                alert(response.data.message);
                 navigate('/dashboard')
             } else {
                 alert(response.data.message);
@@ -36,6 +37,7 @@ function UpdateUser() {
             password
         }).then((response) => {
             if (response.data.message === 'Password updated!') {
+                alert(response.data.message);
                 navigate('/dashboard')
             } else {
                 alert(response.data.message);
