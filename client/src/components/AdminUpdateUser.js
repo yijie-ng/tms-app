@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/Login.css";
 import axios from "axios";
@@ -6,12 +6,43 @@ import useAuth from "../hooks/useAuth";
 import Disabled from "./Disabled";
 import MultiSelect from "react-multiple-select-dropdown-lite";
 import "react-multiple-select-dropdown-lite/dist/index.css";
+import {
+    faCheck,
+    faTimes,
+    faInfoCircle,
+  } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,10}$/;
+const FIRSTNAME_REGEX = /^[a-zA-Z-/\s]{2,30}$/;
+const LASTNAME_REGEX = /^[a-zA-Z-/\s]{2,30}$/;
+const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const AdminUpdateUser = () => {
+  const firstNameRef = useRef();
+  const lastNameRef = useRef();
+  const emailRef = useRef();
+
   const [firstName, setFirstName] = useState("");
+  const [validFirstName, setValidFirstName] = useState(false);
+  const [firstNameFocus, setFirstNameFocus] = useState(false);
+
   const [lastName, setLastName] = useState("");
+  const [validLastName, setValidLastName] = useState(false);
+  const [lastNameFocus, setLastNameFocus] = useState(false);
+
   const [email, setEmail] = useState("");
+  const [validEmail, setValidEmail] = useState(false);
+  const [emailFocus, setEmailFocus] = useState(false);
+
   const [password, setPassword] = useState("");
+  const [validPassword, setValidPassword] = useState(false);
+  const [passwordFocus, setPasswordFocus] = useState(false);
+
+  const [matchPassword, setMatchPassword] = useState("");
+  const [validMatch, setValidMatch] = useState(false);
+  const [matchFocus, setMatchFocus] = useState(false);
+
   const [userRole, setUserRole] = useState("");
   const [userTitle, setUserTitle] = useState("");
   const [removeUserTitle, setRemoveUserTitle] = useState("");
@@ -36,6 +67,28 @@ const AdminUpdateUser = () => {
     setUserStatus(localStorage.getItem("Status"));
   }, []);
 
+  useEffect(() => {
+    const result = FIRSTNAME_REGEX.test(firstName);
+    setValidFirstName(result);
+  }, [firstName]);
+
+  useEffect(() => {
+    const result = LASTNAME_REGEX.test(lastName);
+    setValidLastName(result);
+  }, [lastName]);
+
+  useEffect(() => {
+    const result = EMAIL_REGEX.test(email);
+    setValidEmail(result);
+  }, [email]);
+
+  useEffect(() => {
+    const result = PWD_REGEX.test(password);
+    setValidPassword(result);
+    const match = password === matchPassword; // comparing password to matchPassword state
+    setValidMatch(match);
+  }, [password, matchPassword]);
+
   axios.defaults.withCredentials = true;
 
   const handleSubmit = (e) => {
@@ -57,8 +110,6 @@ const AdminUpdateUser = () => {
         }
       });
   };
-
-  console.log(email);
 
   const updateUserPassword = () => {
     axios
@@ -174,43 +225,95 @@ const AdminUpdateUser = () => {
                     {msg}
                   </div>
                   <div className="form-group mt-3">
-                    <label htmlFor="firstName">First Name</label>
+                    <label htmlFor="firstName">
+                        First Name:
+                        <span className={validFirstName ? "valid" : "d-none"}>
+                            <FontAwesomeIcon icon={faCheck} />
+                        </span>
+                        <span className={validFirstName || !firstName ? "d-none" : "invalid"}>
+                            <FontAwesomeIcon icon={faTimes} />
+                        </span>
+                    </label>
                     <input
                       className="form-control"
                       type="text"
                       id="firstName"
                       required
                       value={firstName}
+                      ref={firstNameRef}
+                      autoComplete="off"
                       onChange={(e) => {
                         setFirstName(e.target.value);
                       }}
+                      onFocus={() => setFirstNameFocus(true)}
+                      onBlur={() => setFirstNameFocus(false)}
                     />
+                    <p id="firstnamenote" className={firstNameFocus && firstName && !validFirstName ? "instructions" : "offscreen"}>
+                          <FontAwesomeIcon icon={faInfoCircle} />
+                          2 to 30 characters.<br />
+                          Must begin with a letter.<br />
+                          Letters, hyphens, and slashes allowed.
+                    </p>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="lastName">Last Name</label>
+                    <label htmlFor="lastName">
+                        Last Name:
+                        <span className={validLastName ? "valid" : "d-none"}>
+                            <FontAwesomeIcon icon={faCheck} />
+                        </span>
+                        <span className={validLastName || !lastName ? "d-none" : "invalid"}>
+                            <FontAwesomeIcon icon={faTimes} />
+                        </span>
+                    </label>
                     <input
                       className="form-control"
                       type="text"
                       id="lastName"
                       required
                       value={lastName}
+                      ref={lastNameRef}
+                      autoComplete="off"
                       onChange={(e) => {
                         setLastName(e.target.value);
                       }}
+                      onFocus={() => setLastNameFocus(true)}
+                      onBlur={() => setLastNameFocus(false)}
                     />
+                    <p id="lastnamenote" className={lastNameFocus && lastName && !validLastName ? "instructions" : "offscreen"}>
+                          <FontAwesomeIcon icon={faInfoCircle} />
+                          2 to 30 characters.<br />
+                          Must begin with a letter.<br />
+                          Letters, hyphens, and slashes allowed.
+                    </p>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="email">
+                        Email:
+                        <span className={validEmail ? "valid" : "d-none"}>
+                            <FontAwesomeIcon icon={faCheck} />
+                        </span>
+                        <span className={validEmail || !email ? "d-none" : "invalid"}>
+                            <FontAwesomeIcon icon={faTimes} />
+                        </span>
+                    </label>
                     <input
                       className="form-control"
                       type="email"
                       id="email"
                       required
                       value={email}
+                      ref={emailRef}
+                      autoComplete="off"
                       onChange={(e) => {
                         setEmail(e.target.value);
                       }}
+                      onFocus={() => setEmailFocus(true)}
+                      onBlur={() => setEmailFocus(false)}
                     />
+                    <p id="emailnote" className={emailFocus && email && !validEmail ? "instructions" : "offscreen"}>
+                          <FontAwesomeIcon icon={faInfoCircle} />
+                          Must be a valid email address.
+                    </p>
                   </div>
                   <div className="form-group">
                     <label htmlFor="user_role">Account Type</label>
@@ -248,14 +351,22 @@ const AdminUpdateUser = () => {
                       <option value="disabled">disabled</option>
                     </select>
                   </div>
-                  <button type="submit" className="btn btn-primary btn-block">
+                  <button disabled={!validFirstName || !validLastName || !validEmail ? true : false} type="submit" className="btn btn-primary btn-block">
                     Save
                   </button>
                 </form>
                 <h2 className="text-center mt-4">Update User Password</h2>
                 <form onSubmit={updateUserPassword}>
                   <div className="form-group">
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password">
+                        Password:
+                        <span className={validPassword ? "valid" : "d-none"}>
+                            <FontAwesomeIcon icon={faCheck} />
+                        </span>
+                        <span className={validPassword || !password ? "d-none" : "invalid"}>
+                            <FontAwesomeIcon icon={faTimes} />
+                        </span>
+                    </label>
                     <input
                       className="form-control"
                       type="password"
@@ -264,9 +375,43 @@ const AdminUpdateUser = () => {
                       onChange={(e) => {
                         setPassword(e.target.value);
                       }}
+                      onFocus={() => setPasswordFocus(true)}
+                      onBlur={() => setPasswordFocus(false)}
                     />
+                    <p id="pwdnote" className={passwordFocus && !validPassword ? "instructions" : "offscreen"}>
+                          <FontAwesomeIcon icon={faInfoCircle} />
+                          8 to 10 characters.<br/>
+                          Must include uppercase and lowercase letters, a number and a special character.<br/>
+                          Allowed special characters: !@#$%
+                    </p>
                   </div>
-                  <button type="submit" className="btn btn-primary btn-block">
+                  <div className="form-group">
+                        <label htmlFor="confirm-password">
+                          Confirm Password:
+                          <span className={validMatch && matchPassword ? "valid" : "d-none"}>
+                            <FontAwesomeIcon icon={faCheck} />
+                          </span>
+                          <span className={validMatch || !matchPassword ? "d-none" : "invalid"}>
+                            <FontAwesomeIcon icon={faTimes} />
+                          </span>
+                        </label>
+                        <input
+                          className="form-control"
+                          type="password"
+                          id="confirm-password"
+                          required
+                          onChange={(e) => {
+                            setMatchPassword(e.target.value);
+                          }}
+                          onFocus={() => setMatchFocus(true)}
+                          onBlur={() => setMatchFocus(false)}
+                        />
+                        <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
+                          <FontAwesomeIcon icon={faInfoCircle} />
+                          Must match the first password input field.
+                        </p>
+                  </div>
+                  <button disabled={!validPassword || !validMatch ? true : false} type="submit" className="btn btn-primary btn-block">
                     Save
                   </button>
                 </form>
