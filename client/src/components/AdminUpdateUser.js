@@ -39,7 +39,7 @@ const AdminUpdateUser = () => {
   axios.defaults.withCredentials = true;
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     axios
       .put(`http://localhost:3001/users/update-user/${id}`, {
         firstName: firstName,
@@ -50,13 +50,15 @@ const AdminUpdateUser = () => {
       })
       .then((response) => {
         if (response.data.message === "User updated!") {
-          setMsg(response.data.message);
-          navigate("/dashboard");
+          alert(response.data.message);
+        //   navigate("/dashboard");
         } else {
           setMsg(response.data.message);
         }
       });
   };
+
+  console.log(email);
 
   const updateUserPassword = () => {
     axios
@@ -166,7 +168,7 @@ const AdminUpdateUser = () => {
                 <h2 className="text-center mt-4">Update User Details</h2>
                 <form onSubmit={handleSubmit}>
                   <div
-                    className={msg ? "alert alert-info" : "offscreen"}
+                    className={msg ? "alert alert-danger" : "offscreen"}
                     role="alert"
                   >
                     {msg}

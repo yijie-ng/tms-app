@@ -6,21 +6,33 @@ import useAuth from "../hooks/useAuth";
 import Disabled from "./Disabled";
 
 function UpdateUser() {
+    const { auth } = useAuth();
+    const navigate = useNavigate();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [id, setID] = useState(null);
-    const navigate = useNavigate();
-    const { auth } = useAuth();
-
+    const [networkStatus, setNetworkStatus] = useState("pending");
+    const userID = auth.id;
+    
+    axios.defaults.withCredentials = true;
+    
     useEffect(() => {
-        setID(localStorage.getItem("ID"));
-        setEmail(localStorage.getItem("Email"));
+        const getData = async () => {
+            try {
+                const getUser = await axios.get(`http://localhost:3001/users/${userID}`);
+                setNetworkStatus("loading");
+                setEmail((getUser.data)[0].email);
+                setNetworkStatus("resolved");
+            } catch (error) {
+                console.log("error", error);
+            }
+        };
+        getData();
     }, []);
 
-    axios.defaults.withCredentials = true;
-
-    const updateUserEmail = () => {
-        axios.put(`http://localhost:3001/users/update-email/${id}`, {
+    const updateUserEmail = (e) => {
+        e.preventDefault();
+        axios.put(`http://localhost:3001/users/update-email/${userID}`, {
             email
         }).then((response) => {
             if (response.data.message === 'Email updated!') {
@@ -33,7 +45,7 @@ function UpdateUser() {
     };
 
     const updateUserPassword = () => {
-        axios.put(`http://localhost:3001/users/update-password/${id}`, {
+        axios.put(`http://localhost:3001/users/update-password/${userID}`, {
             password
         }).then((response) => {
             if (response.data.message === 'Password updated!') {
@@ -46,7 +58,8 @@ function UpdateUser() {
     };
 
   return (
-<div className='container'>
+      <>
+      {networkStatus === "resolved" ? (<div className='container'>
     {auth.userStatus === 'active' 
         ? <>
             <div className='row justify-content-center'>
@@ -82,7 +95,8 @@ function UpdateUser() {
           </>
         : <Disabled />
     }
-    </div>
+    </div>) : null}
+      </>
   );
 }
 

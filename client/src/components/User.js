@@ -27,12 +27,6 @@ function User() {
       getData();
    }, []);
 
-  const setData = (data) => {
-    let { id, email } = data;
-    localStorage.setItem("ID", id);
-    localStorage.setItem("Email", email);
-  };
-
   return (
     <>
     {networkStatus === "resolved" ? (
@@ -76,7 +70,6 @@ function User() {
                     <Link to="/update/user">
                         <button
                         className="btn btn-warning"
-                        onClick={() => setData(data)}
                         >
                         Update
                         </button>
