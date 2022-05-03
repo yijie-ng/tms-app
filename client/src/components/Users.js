@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
+import {
+    faCheck,
+    faTimes,
+    faInfoCircle,
+  } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../assets/Users.css";
 
 const Users = () => {
   const [usersData, setUsersData] = useState([]);
@@ -99,7 +106,9 @@ const Users = () => {
                     </td> */}
                     <td>{users.user_role}</td>
                     <td>
-                    {users.status}
+                    {users.status === "active" ? 
+                        <span className="active" data-toggle="tooltip" data-placement="bottom" title="Active"><FontAwesomeIcon icon={faCheck} /></span> : <span className="disabled" data-toggle="tooltip" data-placement="bottom" title="disabled"><FontAwesomeIcon icon={faTimes} /></span>
+                    }
                     </td>
                     <td>
                     <Link to="/admin/update/user">

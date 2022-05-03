@@ -1,0 +1,9 @@
+.active {
+    color: limegreen;
+    margin-left: 0.25rem;
+}
+
+.disabled {
+    color: red;
+    margin-left: 0.25rem;
+}

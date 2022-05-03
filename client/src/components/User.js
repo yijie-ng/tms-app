@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
+import {
+    faCheck,
+    faTimes,
+    faInfoCircle,
+  } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "../assets/Users.css";
 
 function User() {
   const { auth } = useAuth();
@@ -65,7 +72,7 @@ function User() {
                     })}</td>
                     {/* <td>Insert project group</td> */}
                     <td>{data.user_role}</td>
-                    <td>{data.status}</td>
+                    <td>{data.status === "active" ? <span className="active" data-toggle="tooltip" data-placement="bottom" title="Active"><FontAwesomeIcon icon={faCheck} /></span> : <span className="disabled" data-toggle="tooltip" data-placement="bottom" title="Disabled"><FontAwesomeIcon icon={faTimes} /></span>}</td>
                     <td>
                     <Link to="/update/user">
                         <button
