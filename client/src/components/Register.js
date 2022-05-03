@@ -179,6 +179,7 @@ function Register() {
       .then((response) => {
         if (response.data.message === "User created successfully!") {
           alert(response.data.message);
+          window.location.reload(true);
           setFirstName("");
           setLastName("");
           setUsername("");
@@ -187,7 +188,6 @@ function Register() {
           setMatchPassword("");
           setUserRole("");
           setUserTitle("");
-          navigate("/register");
         } else {
           setErrMsg(response.data.message);
         }
@@ -227,7 +227,7 @@ function Register() {
                           type="text"
                           id="firstName"
                           ref={firstNameRef}
-                          autocomplete="off"
+                          autoComplete="off"
                           required
                           onChange={(e) => setFirstName(e.target.value)}
                           onFocus={() => setFirstNameFocus(true)}
@@ -256,7 +256,7 @@ function Register() {
                           type="text"
                           id="lastName"
                           ref={lastNameRef}
-                          autocomplete="off"
+                          autoComplete="off"
                           required
                           onChange={(e) => {
                             setLastName(e.target.value);
@@ -286,7 +286,7 @@ function Register() {
                           type="text"
                           id="username"
                           ref={usernameRef}
-                          autocomplete="off"
+                          autoComplete="off"
                           required
                           onChange={(e) => {
                             setUsername(e.target.value);
@@ -316,7 +316,7 @@ function Register() {
                           type="email"
                           id="email"
                           ref={emailRef}
-                          autocomplete="off"
+                          autoComplete="off"
                           required
                           onChange={(e) => {
                             setEmail(e.target.value);
@@ -394,8 +394,6 @@ function Register() {
                           onChange={(e) => {
                             setUserRole(e.target.value);
                           }}
-                          onFocus={() => setUserRoleFocus(true)}
-                          onBlur={() => setUserRoleFocus(false)}
                         >
                           <option value="">Choose type!</option>
                           {userRoleData.map((data) => {

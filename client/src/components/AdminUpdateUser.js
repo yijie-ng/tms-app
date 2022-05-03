@@ -83,7 +83,7 @@ const AdminUpdateUser = () => {
       })
       .then((response) => {
         if (
-          response.data.message === "New roles assigned to user successfully!"
+          response.data.message === "New project roles assigned to user successfully!"
         ) {
           alert(response.data.message);
           navigate("/dashboard");
@@ -103,7 +103,7 @@ const AdminUpdateUser = () => {
         status: "unassigned",
       })
       .then((response) => {
-        if (response.data.message === "Role removed from user successfully!") {
+        if (response.data.message === "Project Role removed from user successfully!") {
           alert(response.data.message);
           navigate("/dashboard");
         } else {

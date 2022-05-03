@@ -8,7 +8,7 @@ function Navbar() {
     
     const handleLogout = () => {
         setAuth(null);
-        localStorage.clear();
+        // localStorage.clear();
         axios.get("http://localhost:3001/api/auth/logout");
     };
 

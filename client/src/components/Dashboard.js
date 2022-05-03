@@ -8,6 +8,7 @@ import Disabled from "./Disabled";
 
 function Dashboard() {
   const { auth } = useAuth();
+  console.log(auth);
   
   return (
     <div className="container">
