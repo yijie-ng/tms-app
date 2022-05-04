@@ -8,7 +8,7 @@ const createToken = (user) => {
           role: user.user_role
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: 1800 }
+        { expiresIn: '1d' }
     );
 
     return accessToken;

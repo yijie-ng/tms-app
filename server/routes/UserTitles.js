@@ -6,6 +6,9 @@ const { validateToken } = require('../jwt');
 // GET - List of project roles
 router.get('/user-titles', validateToken, controller.userTitles);
 
+// POST - Add new project role
+router.post('/user-titles/create', validateToken, controller.addUserTitles);
+
 // GET - get all users' project roles
 router.get('/users-titles', validateToken, controller.getUsersTitles);
 

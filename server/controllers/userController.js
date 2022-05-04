@@ -27,8 +27,8 @@ const createUser = (req, res) => {
     userRole,
     userTitle,
     password,
-    // userGroup,
     projectRoleStatus,
+    // userGroup,
   } = req.body;
   db.query(
     "SELECT * FROM accounts WHERE username =?",
@@ -93,19 +93,25 @@ const createUser = (req, res) => {
 const updateUserEmail = (req, res) => {
   const { email } = req.body;
   const id = req.params.id;
-  db.query(
-    "UPDATE accounts SET email = ? WHERE id = ?",
-    [email, id],
-    (err, result) => {
-      if (err) {
-        res.json({ err: err });
-      } else {
-        if (result) {
-          res.json({ message: "Email updated!" });
+  db.query("SELECT * FROM accounts WHERE email = ?", email, (err, result) => {
+    if (result.length > 0) {
+      res.json({ message: "Email already exists in database!" });
+    } else {
+      db.query(
+        "UPDATE accounts SET email = ? WHERE id = ?",
+        [email, id],
+        (err, result) => {
+          if (err) {
+            res.json({ err: err });
+          } else {
+            if (result) {
+              res.json({ message: "Email updated!" });
+            }
+          }
         }
-      }
+      );
     }
-  );
+  });
 };
 
 // PUT - Update user password only
@@ -132,19 +138,19 @@ const updateUserPassword = (req, res) => {
 // PUT - Admin update user details, Update User by id, should able to update email, password, disable user, user's role, title & group
 const updateUserInfo = (req, res) => {
   const id = req.params.id;
-  const { firstName, lastName, email, userRole, userTitle, userStatus } =
+  const { firstName, lastName, email, userRole, userStatus } =
     req.body;
-  db.query(
-    "UPDATE accounts SET firstName = ?, lastName = ?, email = ?, user_role = ?, user_title = ?, status = ? WHERE id = ?",
-    [firstName, lastName, email, userRole, userTitle, userStatus, id],
-    (err, result) => {
-      if (err) {
-        res.json({ err: err });
-      } else {
-        res.json({ message: "User updated!" });
+    db.query(
+      "UPDATE accounts SET firstName = ?, lastName = ?, email = ?, user_role = ?, status = ? WHERE id = ?",
+      [firstName, lastName, email, userRole, userStatus, id],
+      (err, result) => {
+        if (err) {
+          res.json({ err: err });
+        } else {
+          res.json({ message: "User updated!" });
+        }
       }
-    }
-  );
+    );
 };
 
 // PUT - update user's status

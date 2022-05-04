@@ -34,11 +34,11 @@ const login = (req, res) => {
                   message: "Login successful!",
                 });
               } else {
-                res.json({ message: "Invalid Password!" });
+                res.json({ message: "Invalid Username/Password!" });
               }
             });
           } else {
-            res.json({ message: "Invalid Username!" });
+            res.json({ message: "Invalid Username/Password!" });
           }
         }
       }

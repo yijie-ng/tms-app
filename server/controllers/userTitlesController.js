@@ -7,6 +7,32 @@ const userTitles = (req, res) => {
   });
 };
 
+// POST - Create new user titles (user groups)
+const addUserTitles = (req, res) => {
+    const { projectRole } = req.body;
+    db.query("SELECT * FROM user_titles WHERE title = ?", projectRole, (err, result) => {
+        if (err) {
+            res.json({ err: err });
+        } else {
+            if (result.length > 0) {
+                res.json({ message: "Project role already exists!" });
+            } else {
+                db.query("INSERT INTO user_titles (title) VALUES (?)", projectRole, (err, result) => {
+                    if (err) {
+                        res.json({ err: err });
+                    } else {
+                        if (result) {
+                            res.json({ message: "New project role created!" });
+                        } else {
+                            res.json({ message: "Failed to create new project role!" });
+                        };
+                    };
+                });
+            };
+        };
+    });
+};
+
 // GET - all users' user titles (user groups)
 const getUsersTitles = (req, res) => {
   db.query("SELECT * FROM user_title_user", (err, result) => {
@@ -32,27 +58,13 @@ const addProjectRoleToUser = (req, res) => {
               [status, id],
               (err, result) => {
                 if (result) {
+                    // res.json({ message: "New project roles assigned to user successfully!" });
                   db.query(
                     "INSERT INTO user_title_user_audit (user_title, username, status) VALUES (?,?,?)",
-                    [title, username, status],
-                    (err, result) => {
-                      if (err) {
-                        res.json({ err: err });
-                      } else {
-                        if (result) {
-                          res.json({
-                            message: "New roles assigned to user successfully!",
-                          });
-                        } else {
-                          res.json({
-                            message: "New roles not added into audit!",
-                          });
-                        }
-                      }
-                    }
+                    [title, username, status]
                   );
                 } else {
-                  res.json({ message: "New roles not added!" });
+                  res.json({ message: "New project roles not added!" });
                 }
               }
             );
@@ -65,28 +77,13 @@ const addProjectRoleToUser = (req, res) => {
                   res.json({ err: err });
                 } else {
                   if (result) {
+                    //   res.json({ message: "New project roles assigned to user successfully!" });
                     db.query(
                       "INSERT INTO user_title_user_audit (user_title, username, status) VALUES (?,?,?)",
-                      [title, username, status],
-                      (err, result) => {
-                        if (err) {
-                          res.json({ err: err });
-                        } else {
-                          if (result) {
-                            res.json({
-                              message:
-                                "New roles assigned to user successfully!",
-                            });
-                          } else {
-                            res.json({
-                              message: "New roles not added into audit!",
-                            });
-                          }
-                        }
-                      }
+                      [title, username, status]
                     );
                   } else {
-                    res.json({ message: "New roles not added!" });
+                    res.json({ message: "New project roles not added!" });
                   }
                 }
               }
@@ -116,6 +113,7 @@ const removeProjectRoleFromUser = (req, res) => {
               [status, id],
               (err, result) => {
                 if (result) {
+                    // res.json({ message: "Project Role removed from user successfully!" });
                   db.query(
                     "SELECT * FROM user_title_user_audit WHERE user_title = ? AND username = ?",
                     [title, username],
@@ -137,11 +135,11 @@ const removeProjectRoleFromUser = (req, res) => {
                                     if (result) {
                                       res.json({
                                         message:
-                                          "Role removed from user successfully!",
+                                          "Project Role removed from user successfully!",
                                       });
                                     } else {
                                       res.json({
-                                        message: "Role not removed!",
+                                        message: "Project Role not removed!",
                                       });
                                     }
                                   }
@@ -154,7 +152,7 @@ const removeProjectRoleFromUser = (req, res) => {
                     }
                   );
                 } else {
-                  res.json({ message: "Role not removed!" });
+                  res.json({ message: "Project Role not removed!" });
                 }
               }
             );
@@ -192,6 +190,7 @@ const checkGroup = (req, res) => {
 module.exports = {
   userTitles,
   getUsersTitles,
+  addUserTitles,
   addProjectRoleToUser,
   removeProjectRoleFromUser,
   checkGroup,
