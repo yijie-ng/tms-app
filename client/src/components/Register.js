@@ -180,14 +180,6 @@ function Register() {
         if (response.data.message === "User created successfully!") {
           alert(response.data.message);
           window.location.reload(true);
-          setFirstName("");
-          setLastName("");
-          setUsername("");
-          setEmail("");
-          setPassword("");
-          setMatchPassword("");
-          setUserRole("");
-          setUserTitle("");
         } else {
           setErrMsg(response.data.message);
         }

@@ -92,7 +92,7 @@ const AdminUpdateUser = () => {
   axios.defaults.withCredentials = true;
 
   const handleSubmit = (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     axios
       .put(`http://localhost:3001/users/update-user/${id}`, {
         firstName: firstName,
@@ -104,14 +104,15 @@ const AdminUpdateUser = () => {
       .then((response) => {
         if (response.data.message === "User updated!") {
           alert(response.data.message);
-        //   navigate("/dashboard");
+          navigate("/dashboard");
         } else {
           setMsg(response.data.message);
         }
       });
   };
 
-  const updateUserPassword = () => {
+  const updateUserPassword = (e) => {
+    e.preventDefault();
     axios
       .put(`http://localhost:3001/users/update-password/${id}`, {
         password,
@@ -121,7 +122,7 @@ const AdminUpdateUser = () => {
           alert(response.data.message);
           navigate("/dashboard");
         } else {
-          alert(response.data.message);
+          setMsg(response.data.message);
         }
       });
   };
@@ -135,13 +136,14 @@ const AdminUpdateUser = () => {
         status: "assigned",
       })
       .then((response) => {
+          console.log(response.data.message);
         if (
-          response.data.message === "New project roles assigned to user successfully!"
+          response.data.message !== "New project roles not added!"
         ) {
-          alert(response.data.message);
+          alert("New project roles assigned to user successfully!");
           navigate("/dashboard");
         } else {
-          alert(response.data.message);
+          setMsg(response.data.message);
         }
       });
   };
@@ -156,11 +158,11 @@ const AdminUpdateUser = () => {
         status: "unassigned",
       })
       .then((response) => {
-        if (response.data.message === "Project Role removed from user successfully!") {
-          alert(response.data.message);
+        if (response.data.message !== "Project Role not removed!") {
+          alert("Project Role removed from user successfully!");
           navigate("/dashboard");
         } else {
-          alert(response.data.message);
+          setMsg(response.data.message);
         }
       });
   };
@@ -357,6 +359,12 @@ const AdminUpdateUser = () => {
                 </form>
                 <h2 className="text-center mt-4">Update User Password</h2>
                 <form onSubmit={updateUserPassword}>
+                  <div
+                        className={msg ? "alert alert-danger" : "offscreen"}
+                        role="alert"
+                    >
+                        {msg}
+                  </div>
                   <div className="form-group">
                     <label htmlFor="password">
                         Password:
@@ -421,6 +429,12 @@ const AdminUpdateUser = () => {
               <div className="form-login mb-4">
                 <h2 className="text-center mt-4">Update Project Roles</h2>
                 <form className="form-inline" onSubmit={addUsersTitles}>
+                  <div
+                    className={msg ? "alert alert-danger" : "offscreen"}
+                    role="alert"
+                  >
+                    {msg}
+                  </div>
                   <div className="form-group">
                     <label htmlFor="user_title_user" className="mr-2">
                       Add Role:
@@ -436,6 +450,12 @@ const AdminUpdateUser = () => {
                 </form>
                 <h2 className="text-center mt-4">Current Assigned Roles</h2>
                 <form className="form-inline" onSubmit={removeUsersTitles}>
+                  <div
+                    className={msg ? "alert alert-danger" : "offscreen"}
+                    role="alert"
+                  >
+                    {msg}
+                  </div>
                   <div className="form-group">
                     <label htmlFor="user_title_user" className="mr-2">
                       Remove Role:
