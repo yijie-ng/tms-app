@@ -41,12 +41,19 @@ function Navbar() {
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <Link to="/register" className="dropdown-item">Add New User</Link>
+                            <Link to="/admin/project-roles/create" className="dropdown-item">Create New Project Role</Link>
                         </div>
+                    </li>
+                    <li className="nav-item">
+                        <Link to="/applications" className="nav-link">App Projects</Link>
                     </li>
                 </ul> : 
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item">
                         <Link to="/dashboard" className="nav-link">Dashboard</Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link to="/applications" className="nav-link">App Projects</Link>
                     </li>
                     {/* <li className="nav-item dropdown">
                         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">

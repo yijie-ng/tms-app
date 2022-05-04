@@ -10,6 +10,9 @@ import RequireAuth from './components/RequireAuth';
 import Unauthorized from './components/Unauthorized';
 import UpdateUser from './components/UpdateUser';
 import AdminUpdateUser from './components/AdminUpdateUser';
+import AppProjects from './components/AppProjects';
+import CreateApp from './components/CreateApp';
+import CreateProjectRole from './components/CreateProjectRole';
 
 function App() {
 
@@ -21,17 +24,19 @@ function App() {
           <Route path="/" element={ <Home /> } />
           <Route path="/login" element={ <Login /> } />
           <Route path="/unauthorized" element={ <Unauthorized />} />
-          {/* <Route path="/register" element={ <Register /> } /> */}
 
           {/* protected routes */}
           <Route element={<RequireAuth allowedRoles={['Admin', 'User']} />}>
             <Route path="/dashboard" element={ <Dashboard /> } />
             <Route path="/update/user" element={ <UpdateUser />} />
+            <Route path="/applications" element={ <AppProjects /> } />
+            <Route path="/applications/create" element={<CreateApp />} />
           </Route>
 
           <Route element={<RequireAuth allowedRoles={['Admin']} />}>  
             <Route path="/register" element={ <Register /> } />
             <Route path="/admin/update/user" element={ <AdminUpdateUser /> } />
+            <Route path="/admin/project-roles/create" element={ <CreateProjectRole /> } />
           </Route>
         </Routes>
     </div>
