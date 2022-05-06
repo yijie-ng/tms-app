@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
+import { CardActions } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import { Button } from "@mui/material";
 import axios from "axios";
 import moment from "moment";
 import CreatePlan from "./CreatePlan";
@@ -15,8 +17,6 @@ const Plans = () => {
   const [networkStatus, setNetworkStatus] = useState("pending");
   const params = useParams();
   const planAppAcronym = params.appAcronym;
-
-  console.log(auth.projectRoles.includes("Project Manager"));
 
   axios.defaults.withCredentials = true;
 
@@ -86,6 +86,11 @@ const Plans = () => {
                               .format("MMM Do, YYYY")}
                           </Typography>
                         </CardContent>
+                        <CardActions>
+                        {auth.projectRoles.includes("Project Manager") ? (
+                                <Button size="small" color="error">Edit Plan</Button>
+                              ) : null}
+                        </CardActions>
                       </Card>
                     </>
                   );
