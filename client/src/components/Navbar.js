@@ -50,7 +50,9 @@ function Navbar() {
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <Link to="/applications" className="dropdown-item">All App Projects</Link>
-                            <Link to="/applications/create" className="dropdown-item">Create New App Project</Link>
+                            {auth.projectRoles.includes("Project Lead") ? (
+                                <Link to="/applications/create" className="dropdown-item">Create New App Project</Link>
+                                ) : null}
                         </div>
                     </li>
                 </ul> : 
@@ -64,7 +66,9 @@ function Navbar() {
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <Link to="/applications" className="dropdown-item">All App Projects</Link>
-                            <Link to="/applications/create" className="dropdown-item">Create New App Project</Link>
+                            {auth.projectRoles.includes("Project Lead") ? (
+                                <Link to="/applications/create" className="dropdown-item">Create New App Project</Link>
+                                ) : null}
                         </div>
                     </li>
                     {/* <li className="nav-item dropdown">

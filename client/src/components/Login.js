@@ -32,7 +32,8 @@ function Login() {
           const userRole = response?.data?.role;
           const id = response?.data?.id;
           const userStatus = response?.data?.userStatus;
-          setAuth({ id, username, userRole, userStatus, accessToken });
+          const projectRoles = response?.data?.projectRoles;
+          setAuth({ id, username, projectRoles, userRole, userStatus, accessToken });
           // setSuccessMsg(response.data.message);
           navigate(from, { replace: true });
         } else {
@@ -79,6 +80,7 @@ function Login() {
                     type="text"
                     id="username"
                     required
+                    autoComplete="off"
                     onChange={(e) => {
                       setUsername(e.target.value);
                     }}
