@@ -14,6 +14,7 @@ import AppProjects from './components/AppProjects';
 import CreateApp from './components/CreateApp';
 import CreateProjectRole from './components/CreateProjectRole';
 import Plans from './components/Plans';
+import Kanban from './components/Kanban';
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
             <Route path="/applications" element={ <AppProjects /> } />
             <Route path="/applications/create" element={<CreateApp />} />
             <Route path="/applications/:appAcronym/plans" element={<Plans />} />
+            <Route path="/applications/:appAcronym/kanban" element={<Kanban />} />
           </Route>
 
           <Route element={<RequireAuth allowedRoles={['Admin']} />}>  

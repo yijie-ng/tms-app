@@ -66,7 +66,9 @@ const AppProjects = () => {
                           <Typography variant="body1">{app.app_description}</Typography>
                           </CardContent>
                           <CardActions>
-                              <Button size="small">View Tasks</Button>
+                              <Link to={`/applications/${app.app_acronym}/kanban`}>
+                                <Button size="small">View Kanban</Button>
+                              </Link>
                               <Link to={`/applications/${app.app_acronym}/plans`}>
                                 <Button size="small">View Plans</Button>
                               </Link>
