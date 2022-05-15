@@ -34,6 +34,7 @@ const CreateApp = () => {
       .post("http://localhost:3001/api/app/create", {
         appAcronym: appAcronym,
         appDesc: appDesc,
+        appRnumber: 1,
         startDate: startDate,
         endDate: endDate,
         permitCreate: permitCreate,
@@ -99,7 +100,7 @@ const CreateApp = () => {
   return (
     <>
       {networkStatus === "resolved" ? (
-        auth.projectRoles.includes("Project Lead") ? (
+        auth.projectRoles.includes("Project Manager") ? (
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <div className="container">
               <div className="row justify-content-center">

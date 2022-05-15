@@ -37,6 +37,11 @@ const AppProjects = () => {
         <h1 className="mb-4">
           <b>All Application Projects</b>
         </h1>
+        {auth.projectRoles.includes("Project Manager") ? (
+          <Link to="/applications/create">
+            <button className="btn btn-primary mb-3">Create App</button>
+          </Link>
+        ) : null}
         <div className="row row-cols-3">
           {appData.length > 0 ? (
             appData.map((app) => {
@@ -57,11 +62,11 @@ const AppProjects = () => {
                           </Typography>
                           <Typography sx={{ mb: 1.5 }} color="text.secondary">
                               Start Date:{" "}
-                              {moment.utc(app.app_startDate).format("MMM Do, YYYY")}
+                              {moment(app.app_startDate).format("LL")}
                           </Typography>
                           <Typography sx={{ mb: 1.5 }} color="text.secondary">
                               End Date:{" "}
-                              {moment.utc(app.app_endDate).format("MMM Do, YYYY")}
+                              {moment(app.app_endDate).format("LL")}
                           </Typography>
                           <Typography variant="body1">{app.app_description}</Typography>
                           </CardContent>
@@ -69,10 +74,7 @@ const AppProjects = () => {
                               <Link to={`/applications/${app.app_acronym}/kanban`}>
                                 <Button size="small">View Kanban</Button>
                               </Link>
-                              <Link to={`/applications/${app.app_acronym}/plans`}>
-                                <Button size="small">View Plans</Button>
-                              </Link>
-                              {auth.projectRoles.includes("Project Lead") ? (
+                              {auth.projectRoles.includes("Project Manager") ? (
                                 <Button size="small" color="error">Edit App</Button>
                               ) : null}
                           </CardActions>
