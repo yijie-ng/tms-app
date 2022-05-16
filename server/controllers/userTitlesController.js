@@ -1,10 +1,21 @@
 const db = require("../database");
 
+// Function to get all defined User titles (user groups) 
+const getAllUserTitles = async () => {
+    return new Promise((resolve, reject) => {
+        db.query("SELECT * FROM user_titles", (err, result) => {
+            return resolve(result);
+          });
+    });
+};
+
 // GET - User titles (user groups)
-const userTitles = (req, res) => {
-  db.query("SELECT * FROM user_titles", (err, result) => {
+const userTitles = async (req, res) => {
+    const result = await getAllUserTitles();
     res.json(result);
-  });
+//   db.query("SELECT * FROM user_titles", (err, result) => {
+//     res.json(result);
+//   });
 };
 
 // POST - Create new user titles (user groups)
@@ -163,35 +174,51 @@ const removeProjectRoleFromUser = (req, res) => {
   });
 };
 
+// Check group function
+const checkGroup = async (username, userTitle) => {
+    return new Promise((resolve, reject) => {
+        db.query(
+            "SELECT * FROM user_title_user WHERE user_title = ? AND username = ?",
+            [userTitle, username],
+            (err, result) => {
+              if (err) {
+                return resolve(false);
+              } else {
+                if (result.length > 0) {
+                  if (result[0].status === "assigned") {
+                    return resolve(true);
+                  } else {
+                    return resolve(false);
+                  }
+                } else {
+                    return resolve(false);
+                }
+              }
+            }
+          );
+    })
+};
+
+
 // GET check if user is in a project role group
-const checkGroup = (req, res) => {
+const checkingGroup = async (req, res) => {
   const { userTitle, username } = req.params;
-  db.query(
-    "SELECT * FROM user_title_user WHERE user_title = ? AND username = ?",
-    [userTitle, username],
-    (err, result) => {
-      if (err) {
-        res.json({ err: err });
-      } else {
-        if (result.length > 0) {
-          if (result[0].status === "assigned") {
-            res.json({ isInGroup: true });
-          } else {
-            res.json({ isInGroup: false });
-          }
-        } else {
-          res.json({ isInGroup: false });
-        }
-      }
-    }
-  );
+  const result = await checkGroup(username, userTitle);
+  console.log(result);
+  if (result) {
+    res.json({ isInGroup: true });
+  } else {
+    res.json({ isInGroup: false });
+  };
 };
 
 module.exports = {
   userTitles,
+  getAllUserTitles,
   getUsersTitles,
   addUserTitles,
   addProjectRoleToUser,
   removeProjectRoleFromUser,
   checkGroup,
+  checkingGroup
 };

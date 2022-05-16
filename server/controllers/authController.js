@@ -1,10 +1,12 @@
 const db = require("../database");
 const bcrypt = require("bcrypt");
 const { createToken } = require("../jwt");
+const { getAllUserTitles, checkGroup } = require("./userTitlesController");
 
 // POST /login - User Login
-const login = (req, res) => {
+const login = async (req, res) => {
     const { username, password } = req.body;
+    const userTitles = await getAllUserTitles();
     db.query(
       "SELECT * FROM accounts WHERE username = ?",
       [username],
@@ -17,6 +19,13 @@ const login = (req, res) => {
             const role = user.user_role;
             const id = user.id;
             const userStatus = user.status;
+            const projectRoles = [];
+            userTitles.forEach(async userTitle => {
+              const inGroup = await checkGroup(user.username, userTitle.title);
+              if (inGroup) {
+                projectRoles.push(userTitle.title);
+              };
+            });
             bcrypt.compare(password, user.password, (err, result) => {
               if (result) {
                 // req.session.user = user;
@@ -31,6 +40,7 @@ const login = (req, res) => {
                   role,
                   userStatus,
                   accessToken,
+                  projectRoles,
                   message: "Login successful!",
                 });
               } else {

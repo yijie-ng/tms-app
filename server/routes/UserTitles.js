@@ -19,6 +19,6 @@ router.put('/users-titles/add', validateToken, controller.addProjectRoleToUser);
 router.put('/users-titles/remove', validateToken, controller.removeProjectRoleFromUser);
 
 // GET - check if user is in a project role group
-router.get('/checkgroup/:userTitle/:username', validateToken, controller.checkGroup);
+router.get('/checkgroup/:userTitle/:username', validateToken, controller.checkingGroup);
 
 module.exports = router;

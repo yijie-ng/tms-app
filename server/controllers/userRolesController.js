@@ -7,6 +7,21 @@ const userRoles = (req, res) => {
   });
 };
 
+// Check roles
+// const checkRoles = async (username, userRole) => {
+//   return new Promise((resolve, reject) => {
+//     db.query("SELECT * FROM accounts WHERE username = ? AND user_role = ?", [username, userRole], (err, result) => {
+//       if (err) {
+//         return resolve(false);
+//       } else {
+//         if (result.length > 0) {
+
+//         }
+//       }
+//     })
+//   });
+// }
+
 module.exports = {
   userRoles,
 };
