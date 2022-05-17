@@ -51,6 +51,21 @@ const getUsersTitles = (req, res) => {
   });
 };
 
+// All users in Project Lead group
+const projectLeadGroup = async () => {
+    return new Promise((resolve, reject) => {
+        db.query("SELECT username FROM user_title_user WHERE user_title = 'Project Lead' AND status = 'assigned'", (err, result) => {
+            if (err) {
+                resolve(false)
+            } else {
+                if (result.length > 0) {
+                    return resolve(result)
+                };
+            };
+        });
+    });
+};
+
 // UPDATE insert into / update user_title_user table and insert into audit table (adding new project roles for user)
 const addProjectRoleToUser = (req, res) => {
   const { userTitle, username, status } = req.body;
@@ -220,5 +235,6 @@ module.exports = {
   addProjectRoleToUser,
   removeProjectRoleFromUser,
   checkGroup,
-  checkingGroup
+  checkingGroup,
+  projectLeadGroup
 };

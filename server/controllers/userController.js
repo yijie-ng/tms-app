@@ -9,9 +9,19 @@ const users = (req, res) => {
   });
 };
 
+const userByUsername = async (username) => {
+  return new Promise((resolve, reject) => {
+    db.query("SELECT * FROM accounts WHERE username = ?", username, (err, result) => {
+      if (result.length > 0) {
+        return resolve(result);
+      };
+    });
+  });
+};
+
 // GET /users/:id - Get user by Id
-const userById = (req, res) => {
-  const id = req.params.id;
+const userById = async (req, res) => {
+  const { id } = req.params;
   db.query("SELECT * FROM accounts WHERE id = ?", id, (err, result) => {
     res.json(result);
   });
@@ -177,4 +187,5 @@ module.exports = {
   updateUserEmail,
   updateUserPassword,
   updateUserInfo,
+  userByUsername
 };

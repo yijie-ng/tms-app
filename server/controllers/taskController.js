@@ -1,5 +1,15 @@
 const db = require("../database");
-const { checkGroup } = require("../controllers/userTitlesController");
+const { checkGroup, projectLeadGroup } = require("../controllers/userTitlesController");
+const { userByUsername } = require("../controllers/userController");
+const nodemailer = require("nodemailer");
+const transporter = nodemailer.createTransport({
+  host: "smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "2c7bd9a8f2bf5b",
+    pass: "754846d4a11766",
+  },
+});
 
 // GET /tasks/:appAcronym/open - All tasks by task_app_acronym and state (open)
 const getOpenTasksByAppAcronym = (req, res) => {
@@ -188,8 +198,19 @@ const updateTaskState = async (req, res) => {
     const { taskState, logonUser, taskName, appAcronym } = req.body;
     const { taskId } = req.params;
     const permissions = await getTaskPermissions(appAcronym);
-    console.log(permissions);
-    console.log(logonUser);
+    let emails = [];
+    projectLeadGroup().then(data => {
+        console.log(data);
+        data.map((user) => {
+            userByUsername(user.username).then(userInfo => {
+                if (userInfo[0].status === 'active') {
+                    emails.push(userInfo[0].email);
+                };
+            });
+        });
+    });
+    // console.log(permissions);
+    // console.log(logonUser);
     db.query("SELECT * FROM task WHERE task_id = ?", taskId, (err, result) => {
         if (err) {
             res.json({ err: err });
@@ -302,6 +323,22 @@ const updateTaskState = async (req, res) => {
                                                 res.json({ err: err });
                                             } else {
                                                 if (result) {
+                                                    emails.map((email) => {
+                                                        let message = {
+                                                            from: "tms@email.com",
+                                                            to: email,
+                                                            subject: `[For Review] ${taskId}: ${taskName} updated to 'Done'`,
+                                                            text: `${taskId}: ${taskName} is updated to 'Done' by ${logonUser}. Please kindly review.`,
+                                                            html: `<h1>${taskId}: ${taskName} is updated to 'Done' by ${logonUser}. Please kindly review.</h1>`,
+                                                          };
+                                                        transporter.sendMail(message, (err, info) => {
+                                                              if (err) {
+                                                                console.log(err);
+                                                              } else {
+                                                                console.log(info);
+                                                              }
+                                                        });
+                                                    });
                                                     res.json({ message: "Task state updated" });
                                                 } else {
                                                     res.json({ message: "Task state not updated" });
