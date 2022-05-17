@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import MultiSelect from "react-multiple-select-dropdown-lite";
+// import MultiSelect from "react-multiple-select-dropdown-lite";
 import "react-multiple-select-dropdown-lite/dist/index.css";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
@@ -68,34 +68,34 @@ const CreateApp = () => {
     getData();
   }, []);
 
-  const titleOptions = [];
-  userTitleData.map((data) => {
-    const titleOption = {
-      label: data.title,
-      value: data.title,
-    };
-    titleOptions.push(titleOption);
-  });
+  // const titleOptions = [];
+  // userTitleData.map((data) => {
+  //   const titleOption = {
+  //     label: data.title,
+  //     value: data.title,
+  //   };
+  //   titleOptions.push(titleOption);
+  // });
 
-  const handlePermitCreate = (val) => {
-    setPermitCreate(val);
-  };
+  // const handlePermitCreate = (val) => {
+  //   setPermitCreate(val);
+  // };
 
-  const handlePermitOpen = (val) => {
-    setPermitOpen(val);
-  };
+  // const handlePermitOpen = (val) => {
+  //   setPermitOpen(val);
+  // };
 
-  const handlePermitToDo = (val) => {
-    setPermitToDoList(val);
-  };
+  // const handlePermitToDo = (val) => {
+  //   setPermitToDoList(val);
+  // };
 
-  const handlePermitDoing = (val) => {
-    setPermitDoing(val);
-  };
+  // const handlePermitDoing = (val) => {
+  //   setPermitDoing(val);
+  // };
 
-  const handlePermitDone = (val) => {
-    setPermitDone(val);
-  };
+  // const handlePermitDone = (val) => {
+  //   setPermitDone(val);
+  // };
 
   return (
     <>
@@ -109,7 +109,7 @@ const CreateApp = () => {
                     <h2 className="text-center mt-4">
                       Create Application Project
                     </h2>
-                    <form onSubmit={handleSubmit}>
+                    <form className="form-login" onSubmit={handleSubmit}>
                       <div
                         className={errMsg ? "alert alert-info" : "offscreen"}
                         role="alert"
@@ -179,40 +179,136 @@ const CreateApp = () => {
                       </h5>
                       <div className="form-group">
                         <label htmlFor="permitCreate">Create task:</label>
-                        <MultiSelect
+                        {/* <MultiSelect
                           options={titleOptions}
                           onChange={handlePermitCreate}
-                        />
+                        /> */}
+                        <select
+                          className="form-control"
+                          id="permitCreate"
+                          required
+                          onChange={(e) => {
+                            setPermitCreate(e.target.value);
+                          }}
+                        >
+                          <option value="">Choose user group!</option>
+                          {userTitleData.map((data) => {
+                            return (
+                              <option key={data.title} value={data.title}>
+                                {data.title}
+                              </option>
+                            );
+                          })}
+                        </select>
                       </div>
                       <div className="form-group">
-                        <label htmlFor="permitOpen">Update open task to To-Do-List:</label>
-                        <MultiSelect
+                        <label htmlFor="permitOpen">
+                          Update open task to To-Do-List:
+                        </label>
+                        {/* <MultiSelect
                           options={titleOptions}
                           onChange={handlePermitOpen}
-                        />
+                        /> */}
+                        <select
+                          className="form-control"
+                          id="permitOpen"
+                          required
+                          onChange={(e) => {
+                            setPermitOpen(e.target.value);
+                          }}
+                        >
+                          <option value="">Choose user group!</option>
+                          {userTitleData.map((data) => {
+                            return (
+                              <option key={data.title} value={data.title}>
+                                {data.title}
+                              </option>
+                            );
+                          })}
+                        </select>
                       </div>
                       <div className="form-group">
-                        <label htmlFor="permitToDoList">Update task from To-Do to Doing:</label>
-                        <MultiSelect
+                        <label htmlFor="permitToDoList">
+                          Update task from To-Do to Doing:
+                        </label>
+                        {/* <MultiSelect
                           options={titleOptions}
                           onChange={handlePermitToDo}
-                        />
+                        /> */}
+                        <select
+                          className="form-control"
+                          id="permitToDoList"
+                          required
+                          onChange={(e) => {
+                            setPermitToDoList(e.target.value);
+                          }}
+                        >
+                          <option value="">Choose user group!</option>
+                          {userTitleData.map((data) => {
+                            return (
+                              <option key={data.title} value={data.title}>
+                                {data.title}
+                              </option>
+                            );
+                          })}
+                        </select>
                       </div>
                       <div className="form-group">
-                        <label htmlFor="permitDoing">Update task from Doing to Done:</label>
-                        <MultiSelect
+                        <label htmlFor="permitDoing">
+                          Update task from Doing to Done:
+                        </label>
+                        {/* <MultiSelect
                           options={titleOptions}
                           onChange={handlePermitDoing}
-                        />
+                        /> */}
+                        <select
+                          className="form-control"
+                          id="permitDoing"
+                          required
+                          onChange={(e) => {
+                            setPermitDoing(e.target.value);
+                          }}
+                        >
+                          <option value="">Choose user group!</option>
+                          {userTitleData.map((data) => {
+                            return (
+                              <option key={data.title} value={data.title}>
+                                {data.title}
+                              </option>
+                            );
+                          })}
+                        </select>
                       </div>
                       <div className="form-group">
-                        <label htmlFor="permitDone">Update task from Done to Close:</label>
-                        <MultiSelect
+                        <label htmlFor="permitDone">
+                          Update task from Done to Close:
+                        </label>
+                        {/* <MultiSelect
                           options={titleOptions}
                           onChange={handlePermitDone}
-                        />
+                        /> */}
+                        <select
+                          className="form-control"
+                          id="permitDone"
+                          required
+                          onChange={(e) => {
+                            setPermitDone(e.target.value);
+                          }}
+                        >
+                          <option value="">Choose user group!</option>
+                          {userTitleData.map((data) => {
+                            return (
+                              <option key={data.title} value={data.title}>
+                                {data.title}
+                              </option>
+                            );
+                          })}
+                        </select>
                       </div>
-                      <button type="submit" className="btn btn-primary btn-block">
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-block"
+                      >
                         Submit
                       </button>
                     </form>
@@ -221,7 +317,9 @@ const CreateApp = () => {
               </div>
             </div>
           </LocalizationProvider>
-        ) : <Unauthorized />
+        ) : (
+          <Unauthorized />
+        )
       ) : null}
     </>
   );

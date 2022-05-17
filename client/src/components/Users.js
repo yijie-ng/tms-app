@@ -133,7 +133,7 @@ const Users = () => {
                 <th scope="col">Last Name</th>
                 <th scope="col">Username</th>
                 <th scope="col">Email</th>
-                <th scope="col">Project Roles</th>
+                <th scope="col">User Group</th>
                 {/* <th scope="col">Project Groups</th> */}
                 <th scope="col">User Role</th>
                 <th scope="col">Status</th>

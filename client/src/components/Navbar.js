@@ -50,7 +50,7 @@ function Navbar() {
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <Link to="/applications" className="dropdown-item">All App Projects</Link>
-                            {auth.projectRoles.includes("Project Lead") ? (
+                            {auth.projectRoles.includes("Project Manager") ? (
                                 <Link to="/applications/create" className="dropdown-item">Create New App Project</Link>
                                 ) : null}
                         </div>
@@ -66,7 +66,7 @@ function Navbar() {
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <Link to="/applications" className="dropdown-item">All App Projects</Link>
-                            {auth.projectRoles.includes("Project Lead") ? (
+                            {auth.projectRoles.includes("Project Manager") ? (
                                 <Link to="/applications/create" className="dropdown-item">Create New App Project</Link>
                                 ) : null}
                         </div>
@@ -80,10 +80,12 @@ function Navbar() {
                         </div>
                     </li> */}
                 </ul>}
+                <span className="nav-item my-2 my-lg-0 mr-3" style={{ color: 'white' }}>Hi, {auth.username}!</span>
                 <button className="btn btn-danger my-2 my-sm-0" onClick={handleLogout}>Sign Out</button>
               </nav>
             : <nav className="navbar navbar-dark bg-primary mb-4">
                 <Link to="/" className="navbar-brand">Task Management App</Link>
+                <span className="nav-item my-2 my-lg-0 mr-3" style={{ color: 'white' }}>Hi, {auth.username}!</span>
                 <button className="btn btn-danger my-2 my-sm-0" onClick={handleLogout}>Sign Out</button>
               </nav>
             : <nav className="navbar navbar-dark bg-primary mb-4">

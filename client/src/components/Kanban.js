@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
 import useAuth from "../hooks/useAuth";
@@ -450,6 +450,10 @@ const Kanban = () => {
     });
   };
 
+  // const MyCard = {
+  //   body: { color: 'black', 'font-size': '14px' }
+  // }
+
   return (
     <>
       {networkStatus === "resolved" ? (
@@ -484,6 +488,9 @@ const Kanban = () => {
               {auth.projectRoles.includes("Project Manager") ? (
                 <CreatePlan />
               ) : null}
+              <Link to="/applications">
+                <button className="btn btn-primary ml-3">Back to Apps</button>
+              </Link>
             </div>
             <div>
               <Dialog
@@ -654,7 +661,7 @@ const Kanban = () => {
                                       </TableHead>
                                       <TableBody>
                                         {clickedTaskNotes
-                                          .reverse()
+                                          // .reverse()
                                           .slice(
                                             page * rowsPerPage,
                                             page * rowsPerPage + rowsPerPage
@@ -683,7 +690,7 @@ const Kanban = () => {
                                                 })}
                                               </TableRow>
                                             );
-                                          })}
+                                          }).reverse()}
                                       </TableBody>
                                     </Table>
                                   </TableContainer>
@@ -786,7 +793,7 @@ const Kanban = () => {
                                       </TableHead>
                                       <TableBody>
                                         {clickedTaskNotes
-                                          .reverse()
+                                          // .reverse()
                                           .slice(
                                             page * rowsPerPage,
                                             page * rowsPerPage + rowsPerPage
@@ -815,7 +822,7 @@ const Kanban = () => {
                                                 })}
                                               </TableRow>
                                             );
-                                          })}
+                                          }).reverse()}
                                       </TableBody>
                                     </Table>
                                   </TableContainer>
@@ -897,7 +904,7 @@ const Kanban = () => {
                                       </TableHead>
                                       <TableBody>
                                         {clickedTaskNotes
-                                          .reverse()
+                                          // .reverse()
                                           .slice(
                                             page * rowsPerPage,
                                             page * rowsPerPage + rowsPerPage
@@ -926,7 +933,7 @@ const Kanban = () => {
                                                 })}
                                               </TableRow>
                                             );
-                                          })}
+                                          }).reverse()}
                                       </TableBody>
                                     </Table>
                                   </TableContainer>
@@ -1031,7 +1038,7 @@ const Kanban = () => {
                                       </TableHead>
                                       <TableBody>
                                         {clickedTaskNotes
-                                          .reverse()
+                                          // .reverse()
                                           .slice(
                                             page * rowsPerPage,
                                             page * rowsPerPage + rowsPerPage
@@ -1060,7 +1067,7 @@ const Kanban = () => {
                                                 })}
                                               </TableRow>
                                             );
-                                          })}
+                                          }).reverse()}
                                       </TableBody>
                                     </Table>
                                   </TableContainer>
@@ -1142,7 +1149,7 @@ const Kanban = () => {
                                       </TableHead>
                                       <TableBody>
                                         {clickedTaskNotes
-                                          .reverse()
+                                          // .reverse()
                                           .slice(
                                             page * rowsPerPage,
                                             page * rowsPerPage + rowsPerPage
@@ -1171,7 +1178,7 @@ const Kanban = () => {
                                                 })}
                                               </TableRow>
                                             );
-                                          })}
+                                          }).reverse()}
                                       </TableBody>
                                     </Table>
                                   </TableContainer>
@@ -1276,7 +1283,7 @@ const Kanban = () => {
                                       </TableHead>
                                       <TableBody>
                                         {clickedTaskNotes
-                                          .reverse()
+                                          // .reverse()
                                           .slice(
                                             page * rowsPerPage,
                                             page * rowsPerPage + rowsPerPage
@@ -1305,7 +1312,7 @@ const Kanban = () => {
                                                 })}
                                               </TableRow>
                                             );
-                                          })}
+                                          }).reverse()}
                                       </TableBody>
                                     </Table>
                                   </TableContainer>
@@ -1387,7 +1394,7 @@ const Kanban = () => {
                                       </TableHead>
                                       <TableBody>
                                         {clickedTaskNotes
-                                          .reverse()
+                                          // .reverse()
                                           .slice(
                                             page * rowsPerPage,
                                             page * rowsPerPage + rowsPerPage
@@ -1416,7 +1423,7 @@ const Kanban = () => {
                                                 })}
                                               </TableRow>
                                             );
-                                          })}
+                                          }).reverse()}
                                       </TableBody>
                                     </Table>
                                   </TableContainer>
@@ -1521,7 +1528,7 @@ const Kanban = () => {
                                       </TableHead>
                                       <TableBody>
                                         {clickedTaskNotes
-                                          .reverse()
+                                          // .reverse()
                                           .slice(
                                             page * rowsPerPage,
                                             page * rowsPerPage + rowsPerPage
@@ -1550,7 +1557,7 @@ const Kanban = () => {
                                                 })}
                                               </TableRow>
                                             );
-                                          })}
+                                          }).reverse()}
                                       </TableBody>
                                     </Table>
                                   </TableContainer>
@@ -1631,7 +1638,7 @@ const Kanban = () => {
                                       </TableHead>
                                       <TableBody>
                                         {clickedTaskNotes
-                                          .reverse()
+                                          // .reverse()
                                           .slice(
                                             page * rowsPerPage,
                                             page * rowsPerPage + rowsPerPage
@@ -1660,7 +1667,7 @@ const Kanban = () => {
                                                 })}
                                               </TableRow>
                                             );
-                                          })}
+                                          }).reverse()}
                                       </TableBody>
                                     </Table>
                                   </TableContainer>
@@ -1686,14 +1693,14 @@ const Kanban = () => {
               </Dialog>
             </div>
           </div>
-          <div className="kanban-container mt-4">
+          <div className="mt-4">
             <Board
-              style={{ backgroundColor: "#eee" }}
+              style={{ backgroundColor: "#eee", display: "flex", justifyContent: "center" }}
               data={data}
               hideCardDeleteIcon
               handleDragEnd={handleDragEnd}
               onCardClick={handleCardClick}
-              // components={{Card: function noRefCheck(){}}}
+              // components={{ Card: MyCard }}
             />
           </div>
         </>

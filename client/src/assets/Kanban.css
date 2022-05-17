@@ -1,11 +1,11 @@
 .kanban-container {
     margin: 10px 3em;
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     /* flex-direction: column; */
     align-content: center;
   }
-  .kanban-container > h3, .kanban-container > h2 {
+  /* .kanban-container > h3, .kanban-container > h2 {
     text-align: center;
     font-weight: bold;  
-  }
+  } */
