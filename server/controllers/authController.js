@@ -28,21 +28,25 @@ const login = async (req, res) => {
             });
             bcrypt.compare(password, user.password, (err, result) => {
               if (result) {
-                // req.session.user = user;
-                // Attach token to user if logged in
-                const accessToken = createToken(user);
-                res.cookie("access-token", accessToken, {
-                  maxAge: 60 * 60 * 24 * 1000,
-                  httpOnly: true,
-                });
-                res.json({
-                  id,
-                  role,
-                  userStatus,
-                  accessToken,
-                  projectRoles,
-                  message: "Login successful!",
-                });
+                if (userStatus !== 'disabled') {
+                  // req.session.user = user;
+                  // Attach token to user if logged in
+                  const accessToken = createToken(user);
+                  res.cookie("access-token", accessToken, {
+                    maxAge: 60 * 60 * 24 * 1000,
+                    httpOnly: true,
+                  });
+                  res.json({
+                    id,
+                    role,
+                    userStatus,
+                    accessToken,
+                    projectRoles,
+                    message: "Login successful!",
+                  });
+                } else {
+                  res.json({ message: "Your account is disabled! Please contact Administrator." });
+                }
               } else {
                 res.json({ message: "Invalid Username/Password!" });
               }
