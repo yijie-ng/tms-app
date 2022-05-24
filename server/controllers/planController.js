@@ -1,4 +1,5 @@
 const db = require("../database");
+const { checkGroup } = require("../controllers/userTitlesController");
 
 // GET /plans - All plans
 const getPlans = (req, res) => {
@@ -48,72 +49,83 @@ const getPlanByAppAndName = (req, res) => {
 };
 
 // POST /plan/create - Create new plan
-const addNewPlan = (req, res) => {
+const addNewPlan = async (req, res) => {
   const {
     planMVPName,
     planStartDate,
     planEndDate,
     planAppAcronym,
     planDescription,
+    username
   } = req.body;
-  db.query(
-    "SELECT * FROM plan WHERE plan_MVP_name = ?",
-    planMVPName,
-    (err, result) => {
-      if (err) {
-        res.json({ err: err });
-      } else {
-        if (result.length > 0) {
-          res.json({ message: "MVP Plan name already exists!" });
+  const inGroup = await checkGroup(username, "Project Manager");
+  if (inGroup) {
+    db.query(
+      "SELECT * FROM plan WHERE plan_MVP_name = ? AND plan_app_acronym = ?",
+      [planMVPName, planAppAcronym],
+      (err, result) => {
+        if (err) {
+          res.json({ err: err });
         } else {
-          db.query(
-            "INSERT INTO plan (plan_MVP_name, plan_startDate, plan_endDate, plan_app_acronym, plan_description) VALUES (?,?,?,?,?)",
-            [
-              planMVPName,
-              planStartDate,
-              planEndDate,
-              planAppAcronym,
-              planDescription,
-            ],
-            (err, result) => {
-              if (err) {
-                res.json({ err: err });
-              } else {
-                if (result) {
-                  res.json({ message: "New application plan created!" });
+          if (result.length > 0) {
+            res.json({ message: "MVP Plan name already exists!" });
+          } else {
+            db.query(
+              "INSERT INTO plan (plan_MVP_name, plan_startDate, plan_endDate, plan_app_acronym, plan_description) VALUES (?,?,?,?,?)",
+              [
+                planMVPName,
+                planStartDate,
+                planEndDate,
+                planAppAcronym,
+                planDescription,
+              ],
+              (err, result) => {
+                if (err) {
+                  res.json({ err: err });
                 } else {
-                  res.json({
-                    message: "Failed to create new application plan!",
-                  });
+                  if (result) {
+                    res.json({ message: "New application plan created!" });
+                  } else {
+                    res.json({
+                      message: "Failed to create new application plan!",
+                    });
+                  }
                 }
               }
-            }
-          );
+            );
+          }
         }
       }
-    }
-  );
+    );
+  } else {
+    res.json({ message: "You do not have permission!" });
+  };
 };
 
 // PUT /plan/update/:appAcronym/:planName
-const updatePlan = (req, res) => {
-  const { planDescription, planStartDate, planEndDate } = req.body;
+const updatePlan = async (req, res) => {
+  const { planDescription, planStartDate, planEndDate, username } = req.body;
   const { appAcronym, planName } = req.params;
-  db.query(
-    "UPDATE plan SET plan_description =  ?, plan_startDate = ?, plan_endDate = ? WHERE plan_app_acronym = ? AND plan_MVP_name = ?",
-    [planDescription, planStartDate, planEndDate, appAcronym, planName],
-    (err, result) => {
-      if (err) {
-        res.json({ err: err });
-      } else {
-        if (result) {
-          res.json({ message: "Plan updated!" });
+  const inGroup = await checkGroup(username, "Project Manager");
+  if (inGroup) {
+    db.query(
+      "UPDATE plan SET plan_description =  ?, plan_startDate = ?, plan_endDate = ? WHERE plan_app_acronym = ? AND plan_MVP_name = ?",
+      [planDescription, planStartDate, planEndDate, appAcronym, planName],
+      (err, result) => {
+        if (err) {
+          res.json({ err: err });
         } else {
-          res.json({ message: "Failed to update plan!" });
+          if (result) {
+            res.json({ message: "Plan updated!" });
+          } else {
+            res.json({ message: "Failed to update plan!" });
+          }
         }
       }
-    }
-  );
+    );
+  } else {
+    res.json({ message: "You do not have permission!" });
+  };
 };
 
 module.exports = {

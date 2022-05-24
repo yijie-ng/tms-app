@@ -9,6 +9,7 @@ const users = (req, res) => {
   });
 };
 
+// Function to get user by username
 const userByUsername = async (username) => {
   return new Promise((resolve, reject) => {
     db.query("SELECT * FROM accounts WHERE username = ?", username, (err, result) => {

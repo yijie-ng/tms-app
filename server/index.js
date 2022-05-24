@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const port = process.env.PORT || 3001;
+const helmet = require("helmet");
+const xssClean = require("xss-clean");
+const hpp = require("hpp");
 
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -40,6 +43,15 @@ app.use(session({
     },
 })); 
 
+// Setup security headers
+app.use(helmet());
+
+// Prevent xss attacks
+app.use(xssClean());
+
+// Prevent HTTP Parameter Pollution attacks
+app.use(hpp());
+
 // Routes
 app.use('/users', userRoute); // Update, get user(s), create user
 app.use('/api/auth', authRoute); // Login, log out user
@@ -48,8 +60,8 @@ app.use('/api', userTitlesRoute); // user's user groups (project roles)
 app.use('/api', appRoute);
 app.use('/api', planRoute);
 app.use('/api', taskRoute);
-// app.use('/api', userGroupsRoute); // users' project groups
 
+// app.use('/api', userGroupsRoute); // users' project groups
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`)

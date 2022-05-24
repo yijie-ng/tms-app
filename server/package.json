@@ -18,12 +18,13 @@
     "express": "^4.17.3",
     "express-session": "^1.17.2",
     "g": "^2.0.1",
+    "helmet": "^5.1.0",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.5",
     "nodemon": "^2.0.15",
-    "sequelize": "^6.18.0",
-    "sequelize-cli": "^6.4.1"
+    "xss-clean": "^0.1.1"
   },
   "devDependencies": {
     "cors": "^2.8.5"

@@ -2,13 +2,19 @@ const db = require("../database");
 const { checkGroup, projectLeadGroup } = require("../controllers/userTitlesController");
 const { userByUsername } = require("../controllers/userController");
 const nodemailer = require("nodemailer");
+const dotenv = require('dotenv');
+dotenv.config();
 const transporter = nodemailer.createTransport({
   host: "smtp.mailtrap.io",
   port: 2525,
   auth: {
-    user: "2c7bd9a8f2bf5b",
-    pass: "754846d4a11766",
+    user: process.env.MAILTRAP_USER,
+    pass: process.env.MAILTRAP_PASSWORD,
   },
+  pool: true, // use pooled connection
+  rateLimit: true, // enable to make sure limiting
+  maxConnections: 1, // set limit to 1 connection only
+  maxMessages: 3, // send 3 emails per sec
 });
 
 // GET /tasks/:appAcronym/open - All tasks by task_app_acronym and state (open)
@@ -37,7 +43,7 @@ const getTodoTasksByAppAcronym = (req, res) => {
             if (result.length > 0) {
                 res.json(result);
             } else {
-                res.json(result);
+                res.json({ message: `No to-do tasks found for ${appAcronym}!`});
             };
         };
     });
@@ -108,89 +114,162 @@ const getTasksByAppAcronym = (req, res) => {
 };
 
 // POST /tasks/create - Create task
-const addNewTask = (req, res) => {
+const addNewTask = async (req, res) => {
     const { taskName, taskDescription, taskNotes, taskId, taskPlan, taskAppAcronym, taskCreator, taskState } = req.body;
-    db.query("INSERT INTO task (task_name, task_description, task_id, task_plan, task_app_acronym, task_creator) VALUES (?,?,?,?,?,?)", [taskName, taskDescription, taskId, taskPlan, taskAppAcronym, taskCreator], (err, result) => {
-        if (err) {
-            res.json({ err: err });
-        } else {
-            if (result) {
-                db.query("SELECT * FROM application WHERE app_acronym = ?", taskAppAcronym, (err, result) => {
-                    if (result) {
-                        const appRnumber = result[0].app_Rnumber + 1
-                        console.log(appRnumber);
-                        db.query("UPDATE application SET app_Rnumber = ? WHERE app_acronym = ?", [appRnumber, taskAppAcronym]);
-                    };
-                });
-                if (taskNotes !== "") {
-                    db.query("INSERT INTO tasks_notes (task_notes, task_name, logon_user, task_state) VALUES (?,?,?,?)", [`${taskCreator} created task: '${taskName}' for plan: '${taskPlan}', with description: '${taskDescription}' and added notes: '${taskNotes}'.`, taskName, taskCreator, taskState], (err, result) => {
-                        if (err) {
-                            res.json({ err: err });
-                        } else {
-                            if (result) {
-                                res.json({ message: "New task created!"});
-                            } else {
-                                res.json({ message: "Failed to create new task!"});
-                            };
-                        };
-                    });
+    const permissions = await getTaskPermissions(taskAppAcronym);
+    checkGroup(taskCreator, permissions[0].app_permit_create).then(data => {
+        if (data) {
+            db.query("INSERT INTO task (task_name, task_description, task_id, task_plan, task_app_acronym, task_creator) VALUES (?,?,?,?,?,?)", [taskName, taskDescription, taskId, taskPlan, taskAppAcronym, taskCreator], (err, result) => {
+                if (err) {
+                    res.json({ err: err });
                 } else {
-                    db.query("INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)", [`${taskCreator} created task: ${taskName} for plan: '${taskPlan}', with description: '${taskDescription}'.`, taskName, taskId, taskCreator, taskState], (err, result) => {
-                        if (err) {
-                            res.json({ err: err });
+                    if (result) {
+                        if (taskNotes !== "") {
+                            db.query("INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)", [`${taskCreator} created task: '${taskName}' for plan: '${taskPlan}', with description: '${taskDescription}' and added notes: '${taskNotes}'.`, taskName, taskId, taskCreator, taskState], (err, result) => {
+                                if (err) {
+                                    res.json({ err: err });
+                                } else {
+                                    if (result) {
+                                        res.json({ message: "New task created!"});
+                                    } else {
+                                        res.json({ message: "Failed to create new task!"});
+                                    };
+                                };
+                            });
                         } else {
-                            if (result) {
-                                res.json({ message: "New task created!"});
-                            } else {
-                                res.json({ message: "Failed to create new task!"});
-                            };
+                            db.query("INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)", [`${taskCreator} created task: ${taskName} for plan: '${taskPlan}', with description: '${taskDescription}'.`, taskName, taskId, taskCreator, taskState], (err, result) => {
+                                if (err) {
+                                    res.json({ err: err });
+                                } else {
+                                    if (result) {
+                                        res.json({ message: "New task created!"});
+                                    } else {
+                                        res.json({ message: "Failed to create new task!"});
+                                    };
+                                };
+                            });
                         };
-                    });
-                }
-            } else {
-                res.json({ message: "Failed to create new task!"});
-            };
+                        db.query("SELECT * FROM application WHERE app_acronym = ?", taskAppAcronym, (err, result) => {
+                            if (result) {
+                                const appRnumber = result[0].app_Rnumber + 1
+                                db.query("UPDATE application SET app_Rnumber = ? WHERE app_acronym = ?", [appRnumber, taskAppAcronym]);
+                            };
+                        });
+                    } else {
+                        res.json({ message: "Failed to create new task!"});
+                    };
+                };
+            });
+        } else {
+            res.json({ message: "You do not have permission!" });
         };
     });
 };
 
 // POST - /task-notes/create - add task notes
 const addNewTaskNotes = async (req, res) => {
-    const { taskNotes, taskName, logonUser, taskState, taskId } = req.body;
-    db.query("INSERT INTO tasks_notes (task_notes, task_name, logon_user, task_state, task_id) VALUES (?,?,?,?,?)", [`${logonUser} added task notes: '${taskNotes}'.`, taskName, logonUser, taskState, taskId], (err, result) => {
-        if (err) {
-            res.json({ err: err });
-        } else {
-            if (result) {
-                res.json({ message: "Task notes added!" });
+    const { taskNotes, taskName, logonUser, taskState, taskId, appAcronym } = req.body;
+    const permissions = await getTaskPermissions(appAcronym);
+    if (taskState === 'open') {
+        checkGroup(logonUser, permissions[0].app_permit_open).then(data => {
+            if (data) {
+                db.query("INSERT INTO tasks_notes (task_notes, task_name, logon_user, task_state, task_id) VALUES (?,?,?,?,?)", [`${logonUser} added task notes: '${taskNotes}'.`, taskName, logonUser, taskState, taskId], (err, result) => {
+                    if (err) {
+                        res.json({ err: err });
+                    } else {
+                        if (result) {
+                            res.json({ message: "Task notes added!" });
+                        } else {
+                            res.json({ message: "Failed to add task notes!" });
+                        };
+                    };
+                });
             } else {
-                res.json({ message: "Failed to add task notes!" });
+                res.json({ message: "You do not have permission!" });
             };
-        };
-    });
+        });
+    } else if (taskState === 'todo') {
+        checkGroup(logonUser, permissions[0].app_permit_toDoList).then(data => {
+            if (data) {
+                db.query("INSERT INTO tasks_notes (task_notes, task_name, logon_user, task_state, task_id) VALUES (?,?,?,?,?)", [`${logonUser} added task notes: '${taskNotes}'.`, taskName, logonUser, taskState, taskId], (err, result) => {
+                    if (err) {
+                        res.json({ err: err });
+                    } else {
+                        if (result) {
+                            res.json({ message: "Task notes added!" });
+                        } else {
+                            res.json({ message: "Failed to add task notes!" });
+                        };
+                    };
+                });
+            } else {
+                res.json({ message: "You do not have permission!" });
+            };
+        });
+    } else if (taskState === 'doing') {
+        checkGroup(logonUser, permissions[0].app_permit_doing).then(data => {
+            if (data) {
+                db.query("INSERT INTO tasks_notes (task_notes, task_name, logon_user, task_state, task_id) VALUES (?,?,?,?,?)", [`${logonUser} added task notes: '${taskNotes}'.`, taskName, logonUser, taskState, taskId], (err, result) => {
+                    if (err) {
+                        res.json({ err: err });
+                    } else {
+                        if (result) {
+                            res.json({ message: "Task notes added!" });
+                        } else {
+                            res.json({ message: "Failed to add task notes!" });
+                        };
+                    };
+                });
+            } else {
+                res.json({ message: "You do not have permission!" });
+            };
+        });
+    } else if (taskState === 'done') {
+        checkGroup(logonUser, permissions[0].app_permit_done).then(data => {
+            if (data) {
+                db.query("INSERT INTO tasks_notes (task_notes, task_name, logon_user, task_state, task_id) VALUES (?,?,?,?,?)", [`${logonUser} added task notes: '${taskNotes}'.`, taskName, logonUser, taskState, taskId], (err, result) => {
+                    if (err) {
+                        res.json({ err: err });
+                    } else {
+                        if (result) {
+                            res.json({ message: "Task notes added!" });
+                        } else {
+                            res.json({ message: "Failed to add task notes!" });
+                        };
+                    };
+                });
+            } else {
+                res.json({ message: "You do not have permission!" });
+            };
+        });
+    } else {
+        res.json({ message: "You do not have permission!" });
+    };
 };
 
 // Function to get permissions of an app
 const getTaskPermissions = async (appAcronym) => {
     return new Promise((resolve, reject) => {
-        db.query("SELECT app_permit_open, app_permit_toDoList, app_permit_doing, app_permit_done FROM application WHERE app_acronym = ?", appAcronym, (err, result) => {
+        db.query("SELECT app_permit_create, app_permit_open, app_permit_toDoList, app_permit_doing, app_permit_done FROM application WHERE app_acronym = ?", appAcronym, (err, result) => {
             return resolve(result);
           });
     });
 };
 
 // GET /tasks/permissions/:appAcronym - permissions of an app
-const taskPermissions = (req, res) => {
+const taskPermissions = async (req, res) => {
     const { appAcronym } = req.params;
-    db.query("SELECT app_permit_create, app_permit_open, app_permit_toDoList, app_permit_doing, app_permit_done FROM application WHERE app_acronym = ?", appAcronym, (err, result) => {
-        if (err) {
-            res.json({ err: err });
-        } else {
-            if (result) {
-                res.json(result);
-            };
-        };
-    });
+    const result = await getTaskPermissions(appAcronym);
+    res.json(result);
+    // db.query("SELECT app_permit_create, app_permit_open, app_permit_toDoList, app_permit_doing, app_permit_done FROM application WHERE app_acronym = ?", appAcronym, (err, result) => {
+    //     if (err) {
+    //         res.json({ err: err });
+    //     } else {
+    //         if (result) {
+    //             res.json(result);
+    //         };
+    //     };
+    // });
 };
 
 // PUT /tasks/update-state/:taskId - update task state
@@ -327,9 +406,9 @@ const updateTaskState = async (req, res) => {
                                                         let message = {
                                                             from: "tms@email.com",
                                                             to: email,
-                                                            subject: `[For Review] ${taskId}: ${taskName} updated to 'Done'`,
-                                                            text: `${taskId}: ${taskName} is updated to 'Done' by ${logonUser}. Please kindly review.`,
-                                                            html: `<h1>${taskId}: ${taskName} is updated to 'Done' by ${logonUser}. Please kindly review.</h1>`,
+                                                            subject: `[For Review] '${taskId}: ${taskName}' updated to 'Done'`,
+                                                            text: `'${taskId}: ${taskName}' is updated to 'Done' by ${logonUser}. Please kindly review.`,
+                                                            html: `<h1>'${taskId}: ${taskName}' is updated to 'Done' by ${logonUser}. Please kindly review.</h1>`,
                                                           };
                                                         transporter.sendMail(message, (err, info) => {
                                                               if (err) {
@@ -804,6 +883,28 @@ const updateTask = async (req, res) => {
                     if (data) {
                         if (taskDescription === "" && taskPlan === "") {
                             res.json({ message: "Please fill in description or plan!" });
+                        } else if (taskDescription === "" && taskPlan === "unassigned") {
+                            db.query("UPDATE task SET task_plan = ? WHERE task_id = ?", ["", taskId], (err, result) => {
+                                if (err) {
+                                    res.json({ err: err });
+                                } else {
+                                    if (result) {
+                                        db.query("INSERT INTO tasks_notes (task_notes, task_name, logon_user, task_state, task_id) VALUES (?,?,?,?,?)", [`${logonUser} unassigned task plan.`, taskName, logonUser, taskState, taskId], (err, result) => {
+                                            if (err) {
+                                                res.json({ err: err });
+                                            } else {
+                                                if (result) {
+                                                    res.json({ message: "Task updated!" });
+                                                } else {
+                                                    res.json({ message: "Task not updated" });
+                                                };
+                                            };
+                                        });
+                                    } else {
+                                        res.json({ message: "Task not updated!" });
+                                    };
+                                };
+                            });
                         } else if (taskDescription === "" && taskPlan !== "") {
                             db.query("UPDATE task SET task_plan = ? WHERE task_id = ?", [taskPlan, taskId], (err, result) => {
                                 if (err) {
@@ -909,5 +1010,6 @@ module.exports = {
     updateTaskState,
     updateTask,
     getAllTaskNotes,
-    taskPermissions
+    taskPermissions,
+    getTaskPermissions
 }
