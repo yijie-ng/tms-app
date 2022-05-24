@@ -310,7 +310,7 @@ const approveDone = async (req, res) => {
                             } else {
                               if (result) {
                                 res
-                                  .status(201)
+                                  .status(200)
                                   .json({ message: "Task updated to 'done'!" });
                               } else {
                                 res.status(400).json({
