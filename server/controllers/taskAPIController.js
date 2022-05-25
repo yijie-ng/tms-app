@@ -55,50 +55,50 @@ const createTask = async (req, res) => {
                             res.status(400).json({ err: err });
                           } else {
                             if (result) {
-                              if (taskNotes !== "") {
+                              if (taskNotes == null || taskNotes == "") {
                                 db.query(
-                                  "INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)",
-                                  [
-                                    `${username} created task: '${taskName}' for plan: '${taskPlan}', with description: '${taskDescription}' and added notes: '${taskNotes}'.`,
-                                    taskName,
-                                    `${taskAppAcronym}_${appRnum}`,
-                                    username,
-                                    "open",
-                                  ],
-                                  (err, result) => {
-                                    if (err) {
-                                      res.status(400).json({ err: err });
-                                    } else {
-                                      if (result) {
-                                        res.status(201).json({
-                                          message: "New task created!",
-                                        });
-                                      } 
+                                    "INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)",
+                                    [
+                                      `${username} created task: '${taskName}' with description: '${taskDescription}'.`,
+                                      taskName,
+                                      `${taskAppAcronym}_${appRnum}`,
+                                      username,
+                                      "open",
+                                    ],
+                                    (err, result) => {
+                                      if (err) {
+                                        res.status(400).json({ err: err });
+                                      } else {
+                                        if (result) {
+                                          res.status(201).json({
+                                            message: "New task created!",
+                                          });
+                                        } 
+                                      }
                                     }
-                                  }
-                                );
+                                  );
                               } else {
                                 db.query(
-                                  "INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)",
-                                  [
-                                    `${username} created task: ${taskName} for plan: '${taskPlan}', with description: '${taskDescription}'.`,
-                                    taskName,
-                                    `${taskAppAcronym}_${appRnum}`,
-                                    username,
-                                    "open",
-                                  ],
-                                  (err, result) => {
-                                    if (err) {
-                                      res.status(400).json({ err: err });
-                                    } else {
-                                      if (result) {
-                                        res.status(201).json({
-                                          message: "New task created!",
-                                        });
-                                      } 
+                                    "INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)",
+                                    [
+                                      `${username} created task: '${taskName}' with description: '${taskDescription}' and added notes: '${taskNotes}'.`,
+                                      taskName,
+                                      `${taskAppAcronym}_${appRnum}`,
+                                      username,
+                                      "open",
+                                    ],
+                                    (err, result) => {
+                                      if (err) {
+                                        res.status(400).json({ err: err });
+                                      } else {
+                                        if (result) {
+                                          res.status(201).json({
+                                            message: "New task created!",
+                                          });
+                                        } 
+                                      }
                                     }
-                                  }
-                                );
+                                  );
                               }
                               db.query(
                                 "SELECT * FROM application WHERE app_acronym = ?",
@@ -142,55 +142,55 @@ const createTask = async (req, res) => {
                                     res.status(400).json({ err: err });
                                   } else {
                                     if (result) {
-                                      if (taskNotes !== "") {
+                                      if (taskNotes == null || taskNotes == "") {
                                         db.query(
-                                          "INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)",
-                                          [
-                                            `${username} created task: '${taskName}' for plan: '${taskPlan}', with description: '${taskDescription}' and added notes: '${taskNotes}'.`,
-                                            taskName,
-                                            `${taskAppAcronym}_${appRnum}`,
-                                            username,
-                                            "open",
-                                          ],
-                                          (err, result) => {
-                                            if (err) {
-                                              res
-                                                .status(400)
-                                                .json({ err: err });
-                                            } else {
-                                              if (result) {
-                                                res.status(201).json({
-                                                  message: "New task created!",
-                                                });
-                                              } 
+                                            "INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)",
+                                            [
+                                              `${username} created task: ${taskName} for plan: '${taskPlan}', with description: '${taskDescription}'.`,
+                                              taskName,
+                                              `${taskAppAcronym}_${appRnum}`,
+                                              username,
+                                              "open",
+                                            ],
+                                            (err, result) => {
+                                              if (err) {
+                                                res
+                                                  .status(400)
+                                                  .json({ err: err });
+                                              } else {
+                                                if (result) {
+                                                  res.status(201).json({
+                                                    message: "New task created!",
+                                                  });
+                                                } 
+                                              }
                                             }
-                                          }
-                                        );
+                                          );
                                       } else {
                                         db.query(
-                                          "INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)",
-                                          [
-                                            `${username} created task: ${taskName} for plan: '${taskPlan}', with description: '${taskDescription}'.`,
-                                            taskName,
-                                            `${taskAppAcronym}_${appRnum}`,
-                                            username,
-                                            "open",
-                                          ],
-                                          (err, result) => {
-                                            if (err) {
-                                              res
-                                                .status(400)
-                                                .json({ err: err });
-                                            } else {
-                                              if (result) {
-                                                res.status(201).json({
-                                                  message: "New task created!",
-                                                });
-                                              } 
+                                            "INSERT INTO tasks_notes (task_notes, task_name, task_id, logon_user, task_state) VALUES (?,?,?,?,?)",
+                                            [
+                                              `${username} created task: '${taskName}' for plan: '${taskPlan}', with description: '${taskDescription}' and added notes: '${taskNotes}'.`,
+                                              taskName,
+                                              `${taskAppAcronym}_${appRnum}`,
+                                              username,
+                                              "open",
+                                            ],
+                                            (err, result) => {
+                                              if (err) {
+                                                res
+                                                  .status(400)
+                                                  .json({ err: err });
+                                              } else {
+                                                if (result) {
+                                                  res.status(201).json({
+                                                    message: "New task created!",
+                                                  });
+                                                } 
+                                              }
                                             }
-                                          }
-                                        );
-                                      }
+                                          );
+                                      };
                                       db.query(
                                         "SELECT * FROM application WHERE app_acronym = ?",
                                         taskAppAcronym,
