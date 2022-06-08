@@ -107,12 +107,11 @@ const CreateTask = () => {
                       <select
                         className="form-control"
                         id="taskPlan"
-                        required
                         onChange={(e) => {
                           setTaskPlan(e.target.value);
                         }}
                       >
-                        <option value="">Choose plan!</option>
+                        <option value={null}>Choose plan!</option>
                         {taskPlanData.length > 0
                           ? taskPlanData.map((data) => {
                               return (

@@ -6,8 +6,10 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import moment from "moment";
+import useAuth from "../hooks/useAuth";
 
 const UpdatePlan = () => {
+  const { auth } = useAuth();
   const [planStartDate, setPlanStartDate] = useState();
   const [planEndDate, setPlanEndDate] = useState();
   const [planDescription, setPlanDescription] = useState();
@@ -45,6 +47,7 @@ const UpdatePlan = () => {
         planDescription: planDescription,
         planStartDate: planStartDate,
         planEndDate: planEndDate,
+        username: auth.username
       })
       .then((response) => {
         if (response.data.message === "Plan updated!") {

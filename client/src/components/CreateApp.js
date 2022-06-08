@@ -42,6 +42,7 @@ const CreateApp = () => {
         permitToDoList: permitToDoList,
         permitDoing: permitDoing,
         permitDone: permitDone,
+        username: auth.username
       })
       .then((response) => {
         if (response.data.message === "New application project created!") {
@@ -105,11 +106,11 @@ const CreateApp = () => {
             <div className="container">
               <div className="row justify-content-center">
                 <div className="col-xs-12 col-sm-6 col-sm-offset-4">
-                  <div className="form-login">
+                  <div className="form-login mb-4">
                     <h2 className="text-center mt-4">
                       Create Application Project
                     </h2>
-                    <form className="form-login" onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit}>
                       <div
                         className={errMsg ? "alert alert-info" : "offscreen"}
                         role="alert"

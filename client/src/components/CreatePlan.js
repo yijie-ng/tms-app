@@ -6,7 +6,10 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
+import useAuth from "../hooks/useAuth";
+
 const CreatePlan = () => {
+  const { auth } = useAuth();
   const [planStartDate, setPlanStartDate] = useState(new Date());
   const [planEndDate, setPlanEndDate] = useState(new Date());
   const [planMVPName, setPlanMVPName] = useState("");
@@ -26,6 +29,7 @@ const CreatePlan = () => {
         planEndDate: planEndDate,
         planAppAcronym: params.appAcronym,
         planDescription: planDescription,
+        username: auth.username
       })
       .then((response) => {
         if (response.data.message === "New application plan created!") {

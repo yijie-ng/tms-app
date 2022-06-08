@@ -62,7 +62,7 @@ const Kanban = () => {
   const [plans, setPlans] = useState([]);
   const [appData, setAppData] = useState([]);
   const [clickedCol, setClickedCol] = useState();
-  const [clickedLaneId, setClickedLaneId] = useState();
+  // const [clickedLaneId, setClickedLaneId] = useState();
   const [clickedTaskNotes, setClickedTaskNotes] = useState([]);
   const [addTaskNotes, setAddTaskNotes] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
@@ -365,7 +365,7 @@ const Kanban = () => {
   const handleCardClick = (cardId, metadata, laneId) => {
     setOpen(true);
     localStorage.setItem("Plan", metadata.planName);
-    setClickedLaneId(laneId);
+    // setClickedLaneId(laneId);
 
     // if (laneId === "plans") {
     //   setClickedCol("plans");
@@ -439,7 +439,8 @@ const Kanban = () => {
       taskName: clickedTaskDetails.task_name,
       logonUser: auth.username,
       taskState: clickedTaskDetails.task_state,
-      taskId: clickedTaskDetails.task_id
+      taskId: clickedTaskDetails.task_id,
+      appAcronym: clickedTaskDetails.task_app_acronym
     }).then((response) => {
       if (response.data.message === "Task notes added!") {
         alert(response.data.message);
@@ -459,38 +460,40 @@ const Kanban = () => {
       {networkStatus === "resolved" ? (
         <>
           <div className="container">
-            <div>
-              <h1>
-                <b>{appAcronym}</b>
-              </h1>
-              <Typography
-                sx={{ fontSize: 18, fontFamily: "Nunito" }}
-                color="text.secondary"
-              >
-                {appData.app_description}
-              </Typography>
-              <Typography sx={{ fontFamily: "Nunito" }} color="text.secondary">
-                Start Date: {moment(appData.app_startDate).format("LL")}
-              </Typography>
-              <Typography
-                sx={{ mb: 1.5, fontFamily: "Nunito" }}
-                color="text.secondary"
-              >
-                End Date: {moment(appData.app_endDate).format("LL")}
-              </Typography>
-            </div>
-            <div>
-              {auth.projectRoles.includes(
-                appPermissions[0].app_permit_create
-              ) ? (
-                <CreateTask />
-              ) : null}
-              {auth.projectRoles.includes("Project Manager") ? (
-                <CreatePlan />
-              ) : null}
-              <Link to="/applications">
-                <button className="btn btn-primary ml-3">Back to Apps</button>
-              </Link>
+            <div className="d-flex justify-content-between">
+              <div className="">
+                <h1>
+                  <b>{appAcronym}</b>
+                </h1>
+                <Typography
+                  sx={{ fontSize: 18, fontFamily: "Nunito" }}
+                  color="text.secondary"
+                >
+                  {appData.app_description}
+                </Typography>
+                <Typography sx={{ fontFamily: "Nunito" }} color="text.secondary">
+                  Start Date: {moment(appData.app_startDate).format("LL")}
+                </Typography>
+                <Typography
+                  sx={{ fontFamily: "Nunito" }}
+                  color="text.secondary"
+                >
+                  End Date: {moment(appData.app_endDate).format("LL")}
+                </Typography>
+              </div>
+              <div className="d-flex align-items-end">
+                {auth.projectRoles.includes(
+                  appPermissions[0].app_permit_create
+                ) ? (
+                  <CreateTask />
+                ) : null}
+                {auth.projectRoles.includes("Project Manager") ? (
+                  <CreatePlan />
+                ) : null}
+                <Link to="/applications">
+                  <button className="btn btn-primary ml-3">Back to Apps</button>
+                </Link>
+              </div>
             </div>
             <div>
               <Dialog
@@ -618,7 +621,12 @@ const Kanban = () => {
                                         setTaskPlan(e.target.value);
                                       }}
                                     >
-                                      <option value="">Choose plan!</option>
+                                      {clickedTaskDetails.task_plan === '' ? <option value="">Choose plan!</option> : (
+                                        <option value="">Unassign or Choose plan!</option>
+                                      )}
+                                      {clickedTaskDetails.task_plan === '' ? null : (
+                                        <option value="unassigned">Unassign plan: '{clickedTaskDetails.task_plan}'</option>
+                                      )}
                                       {plans.length > 0
                                         ? plans.map((data) => {
                                             return (
@@ -1693,7 +1701,7 @@ const Kanban = () => {
               </Dialog>
             </div>
           </div>
-          <div className="mt-4">
+          <div className="mt-3">
             <Board
               style={{ backgroundColor: "#eee", display: "flex", justifyContent: "center" }}
               data={data}

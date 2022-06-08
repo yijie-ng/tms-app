@@ -102,7 +102,8 @@ const AppProjects = () => {
       permitOpen: permitOpen,
       permitToDoList: permitToDoList,
       permitDoing: permitDoing,
-      permitDone: permitDone
+      permitDone: permitDone,
+      username: auth.username
     }).then((response) => {
       if (response.data.message === "App updated!") {
         alert(response.data.message);
@@ -122,7 +123,7 @@ const AppProjects = () => {
           </h1>
           {auth.projectRoles.includes("Project Manager") ? (
             <Link to="/applications/create">
-              <button className="btn btn-primary mb-3">Create App</button>
+              <button className="btn btn-primary">Create App</button>
             </Link>
           ) : null}
           <div className="row row-cols-3">
@@ -130,11 +131,11 @@ const AppProjects = () => {
               appData.map((app) => {
                 return (
                   <>
-                    <div className="col">
+                    <div className="col mt-3">
                       <Card key={app.app_acronym}>
                         <CardContent>
                           <Typography
-                            sx={{ fontSize: 14 }}
+                            sx={{ fontSize: 14, mb: 1.5 }}
                             color="text.secondary"
                             gutterBottom
                           >
@@ -143,7 +144,7 @@ const AppProjects = () => {
                           <Typography variant="h5" component="div">
                             {app.app_acronym}
                           </Typography>
-                          <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                          <Typography color="text.secondary">
                             Start Date: {moment(app.app_startDate).format("LL")}
                           </Typography>
                           <Typography sx={{ mb: 1.5 }} color="text.secondary">
